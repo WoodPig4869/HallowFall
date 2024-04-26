@@ -13,26 +13,35 @@ HallowFall-backend是一個包含會員功能和社群媒體（發文和留言�
 - Java 17
 
 ## 安裝與設定
-
 1. 切換到HallowFall-frontend目錄：
-
     ```
     cd HallowFall-frontend/
     ```
-
 2. 安裝相關依賴：
-
     ```
     npm install
     ```
-
 3. 導入MySQL數據庫結構：
+    在MySQL中執行文件：`\initialize_database.sql`
 
-    導入SQL文件：`/HallowFall-backend/DB/SQLQuery_1.sql`
-
-4. 設定MySQL登入方式
-
-    設定文件：`\HallowFall-backend\src\main\resources\application.properties`
+4. 設定SQL登入方式
+    設定文件：`\HallowFall\backend\src\main\resources\application.properties`中的登入方式
+    ```
+    spring.datasource.username={your_username}
+    spring.datasource.password={your_password}
+    ```
+5. 啟動後端服務
+    - 運行 `\backend\src\main\java\tw\liangze\backend\BackendApplication.java`
+    - 或是使用 Maven package 打包成.jar
+    ```
+    java -jar backend/target/backend-x.x.x-SNAPSHOT.jar
+    ```
+6. 啟動前端服務
+    ```
+    cd frontend
+    npm run dev
+    ```
+7. 訪問 `http://localhost:5173/`
 
 ## 功能特色
 

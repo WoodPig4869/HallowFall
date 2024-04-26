@@ -2,10 +2,11 @@ import axios from 'axios';
 
 // 創建axios實例
 const instance = axios.create({
-    baseURL: 'http://localhost:8080', // 設定預設的URL
-    headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-    }
+  baseURL: "http://localhost:8080", // 設定預設的URL
+  headers: {
+    "Content-Type": "application/json; charset=UTF-8",
+  },
+  timeout: 10000, // 設定請求超時時間，單位為毫秒 (10秒)
 });
 
 // 請求攔截器：在請求發送前執行
@@ -34,6 +35,10 @@ instance.interceptors.response.use(
         if (error.response.status === 401) {
             // 401 代表尚未登入，或登入憑證過期
             window.location.href = '/login';// 導向登入頁
+        }
+        if (error.code === "ECONNABORTED") {
+          // 請求超時處理
+          ElMessage.error("請求超時");
         }
         return Promise.reject(error);
     }
