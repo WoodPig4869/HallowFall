@@ -15,7 +15,8 @@
         <h2 class="card-title">功能特色</h2>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
-            <strong>前後端分離：</strong>使用前後端分離的架構，提高了應用程序的可擴展性和可維護性。前端利用Vue.js框架創建動態且交互式的用戶界面，後端使用Java和Spring框架進行開發。</li>
+            <strong>前後端分離：</strong>使用前後端分離的架構，提高了應用程序的可擴展性和可維護性。前端利用Vue.js框架創建動態且交互式的用戶界面，後端使用Java和Spring框架進行開發。
+          </li>
           <li class="list-group-item"><strong>JWT 身份驗證：</strong>實現了JWT（JSON Web
             Tokens）作為核心身份驗證機制，提升安全性並無縫體驗。JWT具有保留參數的功能，進一步降低請求次數，提升用戶體驗。</li>
           <li class="list-group-item"><strong>MySQL
@@ -30,14 +31,41 @@
       </div>
     </div>
   </div>
-
   <br />
   <br />
   <br />
   <br />
+  <button v-show=false @click="test" class="btn btn-primary">Click Me</button>
   <br />
+  <textarea v-model="this.editorData" />
+  <v-md-editor v-model="this.editorData" mode="edit" placeholder="請輸入內容..." @save="save"></v-md-editor>
+  <v-md-editor v-model="this.editorData" mode="preview"></v-md-editor>
+  
 </template>
+
 <script>
+
+
+export default {
+  component: {
+  },
+  data() {
+    return {
+      editorData: '',
+      markdownContent: '',
+
+    }
+  },
+  methods: {
+    save() {
+      console.log('save', this.editorData);
+    },
+    test() {
+      
+    }
+  }
+
+}
 </script>
 
 <style>

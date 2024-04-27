@@ -50,6 +50,11 @@ const routes = [
         component: NewPost,
         name: "NewPost",
       },
+      {
+        path: "/test",
+        component: () => import("@/components/Card.vue"),
+        name: "Test",
+      },
     ],
   },
 ];

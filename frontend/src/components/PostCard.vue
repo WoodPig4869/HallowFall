@@ -1,31 +1,29 @@
 <template>
 
-    <el-card class="mt-2" style="width: 100%; height: 170px;" shadow="hover">
-        <div class="common-layout">
-            <el-container>
-                <el-aside width="300px">
-                    <el-image style="width: auto; height: 150px" :src=post.image fit="cover" />
-                </el-aside>
-                <el-container>
+    <el-card class="mt-2" shadow="hover">
+        <div class="d-flex flex-column flex-md-row">
+            <el-image class="me-md-3 mb-3 mb-md-0" style="width: 150px; height: 150px;" :src="post.image" fit="cover" />
+            <div class="flex-grow-1">
+                <router-link :to="'/postInfo/' + post.postId">
+                    <h4 style="font-weight: bold">{{ post.title }}</h4>
+                </router-link>
+                <div class="d-flex flex-column flex-md-row justify-content-between">
+                    <div class="mb-2 mb-md-0">
+                        <p class="fw-bold mb-1">作者：</p>
+                        <router-link :to="`/posts/${post.userId}`" class="text-decoration-none">{{ post.nickname
+                            }}</router-link>
 
-                    <el-header>
-                        <router-link :to="'/postInfo/' + post.postId">
-                            <h4 style="font-weight: bold">{{ post.title }}</h4>
-                        </router-link>
-                    </el-header>
-                    <el-main>
-                        <el-row>
-                            <p>作者：</p>
-                            <a :href="'/posts/' + post.userId">
-                                <el-col :span>{{ post.nickname }}</el-col>
-                            </a>
-                            <el-col :span="6">發布日期：<br />{{ post.createdAt }}</el-col>
-                            <el-col :span="2"></el-col>
-                            <el-col :span="6">最後編輯於：<br />{{ post.updatedAt }}</el-col>
-                        </el-row>
-                    </el-main>
-                </el-container>
-            </el-container>
+                    </div>
+                    <div class="mb-2 mb-md-0">
+                        <p class="fw-bold mb-1">發布日期：</p>
+                        <p>{{ post.createdAt }}</p>
+                    </div>
+                    <div>
+                        <p class="fw-bold mb-1">最後編輯於：</p>
+                        <p>{{ post.updatedAt }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </el-card>
 

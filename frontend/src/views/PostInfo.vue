@@ -1,19 +1,39 @@
 <template>
     <div class="post-info">
         <header>
-            <el-row>
-                <el-col :span="8">文章ID：<br />{{ post.postId }}</el-col>
-                <el-col :span="6">發布日期：<br />{{ post.createdAt }}</el-col>
-                <el-col :span="6">最後編輯於：<br />{{ post.updatedAt }}</el-col>
-            </el-row>
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="fw-bold">文章ID：</p>
+                        <p>{{ post.postId }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fw-bold">發布日期：</p>
+                        <p>{{ post.createdAt }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fw-bold">最後編輯於：</p>
+                        <p>{{ post.updatedAt }}</p>
+                    </div>
+                </div>
+            </div>
         </header>
-        <div id="edit container" v-if="postOwner" class="container m-3">
-            <button class="btn btn-primary" @click="toggleEdit()" style="max-width: 20%;">編輯模式</button>
-            <button class="btn btn-danger" @click="deletePost()" style="max-width: 20%;">刪除文章</button>
+        <div id="edit container" class="container m-3">
+            <div v-if="postOwner" class="container d-flex justify-content-end align-items-center">
+                <button class="btn btn-primary" @click="editorModeToggle()">編輯模式</button>
+                <button class="btn btn-danger" @click="deletePost()">刪除文章</button>
+            </div>
             <br />
 
-            <div id="editor" v-if="editMode" @click="setIsDataDirtyTrue">
-                <froala id="edit" :tag="'textarea'" :config="editorConfig" v-model:value="post.content"></froala>
+            <div class="w-100 text-center">
+                <h1 class="m-2">{{ post.title }}</h1>
+            </div>
+            <div class="container d-flex justify-content-center align-items-center">
+                <el-image :src=post.image fit="cover" class="img-fluid" style="max-width: 500px;" />
+            </div>
+            <div id="editor" @click="setIsDataDirtyTrue">
+                <v-md-editor v-model="this.post.content" :mode="this.editorMode" placeholder="請輸入內容..."
+                    @save="save()"></v-md-editor>
                 <el-upload ref="image" class="upload-demo" :limit="1" :on-change="handleFileChange1">
                     <template #trigger>
                         <el-button type="primary" style="margin: 10px;">上傳封面圖</el-button>
@@ -23,13 +43,7 @@
                 </el-upload>
             </div>
         </div>
-
-        <body class="container m-5">
-            <h1 class="m-2">{{ post.title }}</h1>
-            <el-image style="width: auto; height: 200px" :src=post.image fit="cover" />
-            <br /><br />
-            <froalaView v-model:value="post.content"></froalaView>
-        </body>
+        <br /><br />
         <hr />
         <div class="container mt-3">
             <h1 class="m-2">留言板</h1>
@@ -75,26 +89,8 @@ export default {
                 postId: parseInt(this.$route.params.postId),
                 content: '',
             },
-            editorConfig: {
-                toolbarButtons: {
-                    'moreText': {
-                        'buttons': ['italic', 'underline', 'bold', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
-                    },
-                    'moreParagraph': {
-                        'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple']
-                    },
-                    'moreRich': {
-                        'buttons': ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR']
-                    },
-                    'moreMisc': {
-                        'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
-                        'align': 'right',
-                        'buttonsVisible': 2
-                    }
-                }
-            },
             isDataDirty: false,
-            editMode: false,
+            editorMode: 'preview',
             postOwner: false,
 
         }
@@ -263,7 +259,10 @@ export default {
             axios.post('/comment', this.newComment).then(response => {
                 window.location.reload();
             })
-        }
+        },
+        editorModeToggle() {
+            this.editorMode = this.editorMode === 'preview' ? 'editable' : 'preview';
+        },
     },
 }
 </script>

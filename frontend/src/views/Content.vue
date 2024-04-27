@@ -39,8 +39,8 @@
                     <div class="card-body">
                         <div class="mb-3" id="signature" @click="setIsDataDirtyTrue">
                             <h5>個人簽名</h5>
-                            <froala id="edit" :tag="'textarea'" :config="editorConfig" v-model:value="editorData">
-                            </froala>
+                            <v-md-editor v-model="this.editorData" :mode="this.editorMode" placeholder="請輸入內容..."
+                                @save="save"></v-md-editor>
                         </div>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                 </template>
             </el-upload>
             <button class="btn btn-success" @click="save()" style="max-width: 20%;">儲存</button>
-            <button class="btn btn-secondary" @click="$router.go(0)" style="max-width: 20%;">取消</button>
+            <button class="btn btn-secondary" @click="editorModeToggle()" style="max-width: 20%;">編輯模式</button>
             <button class="btn btn-danger" @click="resetPassword()" style="max-width: 30%;">重設密碼</button>
         </div>
 
@@ -88,7 +88,7 @@ export default defineComponent({
         window.removeEventListener('beforeunload', this.handleBeforeUnload);
     },
     setup() {
-        
+
         const userInfo = reactive({
             phone: '',
             signature: '<p></p>',
@@ -129,28 +129,11 @@ export default defineComponent({
     },
     data() {
         return {
-            editorConfig: {
-                toolbarButtons: {
-                    'moreText': {
-                        'buttons': ['italic', 'underline', 'bold', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
-                    },
-                    'moreParagraph': {
-                        'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple']
-                    },
-                    'moreRich': {
-                        'buttons': ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR']
-                    },
-                    'moreMisc': {
-                        'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
-                        'align': 'right',
-                        'buttonsVisible': 2
-                    }
-                }
-            },
+            editorMode: 'preview',
             editorData: '',
-            tableData:[],
+            tableData: [],
             isDataDirty: false,
-            
+
         };
     },
 
@@ -198,7 +181,7 @@ export default defineComponent({
             // 設定資料未儲存
             this.setIsDataDirtyTrue();
         },
-    
+
 
         async save() {
             // DOMPurify防禦XSS
@@ -207,54 +190,54 @@ export default defineComponent({
             this.userInfo.email = DOMPurify.sanitize(this.userInfo.email);
             this.userInfo.avatar = DOMPurify.sanitize(this.userInfo.avatar);
             this.userInfo.coverImage = DOMPurify.sanitize(this.userInfo.coverImage);
-            
-                Swal.fire({
-                    title: "儲存中...",
-                    html: "請稍後",
-                    timerProgressBar: true,
-                    timer: 2000,
-                    allowOutsideClick: false,// 防止點擊背景關閉
-                    allowEscapeKey: false,// 防止按 ESC 關閉
-                    didOpen: () => {
-                        Swal.showLoading();
-                        const timer = Swal.getPopup().querySelector(".swal2-progress-bar");
-                    },
-                }).then((result) => {
-                    /* Read more about handling dismissals below */
-                    if (result.dismiss === Swal.DismissReason.timer) {
-                        console.log("I was closed by the timer");
-                    }
-                });
-                try {
-                    const response = await axios.put('/user/self', {
-                        signature: this.editorData,
-                        nickname: this.userInfo.nickname,
-                        avatar: this.userInfo.avatar,
-                        coverImage: this.userInfo.coverImage,
-                        email: this.userInfo.email
-                    });
 
-                    await new Promise((resolve) => setTimeout(resolve, 550));                   
-                        const token = response.data.token;
-                        Swal.fire({
-                            title: "儲存成功！",
-                            icon: "success",
-                            confirmButtonText: "確認",
-                            allowOutsideClick: false,
-                            allowEscapeKey: false
-                        });
-                        // 設定資料已儲存
-                        this.isDataDirty = false;
-                } catch (error) {
-                    await new Promise((resolve) => setTimeout(resolve, 450));
-                    Swal.fire({
-                        title: "錯誤",
-                        text: "伺服器無回應，請聯繫管理員",
-                        icon: "error",
-                        confirmButtonText: "確認",
-                    });
+            Swal.fire({
+                title: "儲存中...",
+                html: "請稍後",
+                timerProgressBar: true,
+                timer: 2000,
+                allowOutsideClick: false,// 防止點擊背景關閉
+                allowEscapeKey: false,// 防止按 ESC 關閉
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector(".swal2-progress-bar");
+                },
+            }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log("I was closed by the timer");
                 }
-            },
+            });
+            try {
+                const response = await axios.put('/user/self', {
+                    signature: this.editorData,
+                    nickname: this.userInfo.nickname,
+                    avatar: this.userInfo.avatar,
+                    coverImage: this.userInfo.coverImage,
+                    email: this.userInfo.email
+                });
+
+                await new Promise((resolve) => setTimeout(resolve, 550));
+                const token = response.data.token;
+                Swal.fire({
+                    title: "儲存成功！",
+                    icon: "success",
+                    confirmButtonText: "確認",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+                // 設定資料已儲存
+                this.isDataDirty = false;
+            } catch (error) {
+                await new Promise((resolve) => setTimeout(resolve, 450));
+                Swal.fire({
+                    title: "錯誤",
+                    text: "伺服器無回應，請聯繫管理員",
+                    icon: "error",
+                    confirmButtonText: "確認",
+                });
+            }
+        },
         async resetPassword() {
             const { value: password } = await Swal.fire({
                 title: "輸入新密碼",
@@ -331,7 +314,7 @@ export default defineComponent({
                                     window.location.href = '/login';
                                 }
                             });
-                            
+
 
                         } catch (error) {
                             await new Promise((resolve) => setTimeout(resolve, 450));
@@ -348,12 +331,17 @@ export default defineComponent({
                 }
             }
 
-        }
+        },
+        editorModeToggle() {
+            this.editorMode = this.editorMode === 'preview' ? 'editable' : 'preview';
+            console.log(this.editorMode);
+        },
+        // next funtion
     },
-    // next funtion
+
+   
 });
 
 </script>
 
-<style>
-</style>
+<style></style>

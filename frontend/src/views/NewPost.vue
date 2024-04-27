@@ -5,7 +5,8 @@
         <input type="text" v-model="post.title" class="form-control m-4" id="title" placeholder="請輸入標題"
             style="width: 98%;">
         <div class="container m-3">
-            <froala id="edit" :tag="'textarea'" :config="editorConfig" v-model:value="post.content"></froala>
+            <v-md-editor v-model="this.editorData" placeholder="請輸入內容..."
+                @save="save"></v-md-editor>
         </div>
         <el-upload ref="image" class="upload-demo" :limit="1" :on-change="handleFileChange1">
             <template #trigger>
@@ -21,29 +22,11 @@
 import axios from '@/axios';
 import Swal from 'sweetalert2';
 import DOMPurify from 'isomorphic-dompurify';
-import router from '@/router';
+
 
 export default {
     data() {
         return {
-            editorConfig: {
-                toolbarButtons: {
-                    'moreText': {
-                        'buttons': ['italic', 'underline', 'bold', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
-                    },
-                    'moreParagraph': {
-                        'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple']
-                    },
-                    'moreRich': {
-                        'buttons': ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR']
-                    },
-                    'moreMisc': {
-                        'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
-                        'align': 'right',
-                        'buttonsVisible': 2
-                    }
-                }
-            },
             isDataDirty: false,
             post: {
                 'title': '',

@@ -3,7 +3,7 @@
         <el-button type="primary" round plain @click="goToNewPost">新貼文</el-button>
         <el-button type="info" round plain @click="goToMyPosts">我的貼文</el-button>
     </div>
-    <div v-if="!this.userId == 0" class="container mb-3">
+    <div v-if="!this.userId == 0" class="container mb-3 ">
         <el-row>
             <el-col :h1="8">會員名稱：<br />{{ targetUser.nickname }}</el-col>
             <el-col :span="6">行動電話：<br />{{ targetUser.phone }}</el-col>

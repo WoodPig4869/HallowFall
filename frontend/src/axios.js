@@ -1,8 +1,16 @@
 import axios from 'axios';
+import router from '@/router';
+import { ElMessage } from "element-plus";
+
+// 環境變數：開發環境為dev，生產環境為prod
+const baseURL =
+  import.meta.env.MODE === "production"
+    ? import.meta.env.VITE_BASE_URL_PROD
+    : import.meta.env.VITE_BASE_URL_DEV;
 
 // 創建axios實例
 const instance = axios.create({
-  baseURL: "http://localhost:8080", // 設定預設的URL
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json; charset=UTF-8",
   },
@@ -34,7 +42,11 @@ instance.interceptors.response.use(
         // statusCode: 400-599
         if (error.response.status === 401) {
             // 401 代表尚未登入，或登入憑證過期
-            window.location.href = '/login';// 導向登入頁
+            ElMessage.warning("請登入");
+            // 重新導向到登入頁
+            router.push("/login");
+        }else if (error.response.status === 403) {
+            ElMessage.warning("權限不足，請聯繫管理員");
         }
         if (error.code === "ECONNABORTED") {
           // 請求超時處理

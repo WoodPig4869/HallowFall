@@ -73,9 +73,35 @@ INSERT INTO user (phone,email,password,role,nickname,signature) VALUES
 ('0912345678','user@user.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','趙六','<h3>我不是李四。</h3>');
 
 INSERT INTO post(user_id,title,content,image) VALUES
-(1,'祝大家事事如意，闔家平安','<h3>為什麼祝大家事事如意</h3><p>闔家平安對我們來說這麼重要？我們都知道，只要有意義，那麽就必須慎重考慮。更多祝大家事事如意，闔家平安的意義是這樣的，黑格爾曾經說過一句發人深省的話，只有永遠躺在泥坑里的人，才不會再掉進坑里。帶著這句話，我們還要更加慎重的審視這個問題：我們一般認為，抓住了問題的關鍵，其他一切則會迎刃而解。</p>','https://i.imgur.com/QVbwPXD.png'),
-(2,'塑膠袋','<h2>塑膠袋，神仙之物：</h2><br /><h2>望之透明如無物；</h2><br /><h2>觸之絲滑如綢緞。</h2>','https://i.imgur.com/oqGcpY7.jpg'),
-(3,'玉山銀行','<h2>玉山銀行真的是很值得探究</h2><p>要想清楚，玉山銀行，到底是一種怎麼樣的存在。</p><br /><p>俾斯麥曾經告訴世人，對於不屈不撓的人來說，沒有失敗這回事。這讓我思索了許久，為什麼玉山銀行對我們來說這麼重要？</p><br /><p>一般來講，我們都必須務必慎重的考慮考慮。在這種困難的抉擇下，本人思來想去，寢食難安。玉山銀行的意義其實就隱藏在我們的生活中，了解清楚玉山銀行到底是一種怎麼樣的存在，是解決一切問題的關鍵。</p>','https://i.imgur.com/yQ6tq1I.jpeg');
+(1,'Nginx反向代理','# Nginx反向代理在前後端分離項目中的優點<br /><br />
+Nginx反向代理是一種在網絡架構中使用的技術，它通過將客戶端的請求轉發給後端服務器，然後將後端服務器的響應返回給客戶端，來實現對後端服務器的代理。相比於正向代理，反向代理是指用於伺服器端的代理。<br /><br />
+以下是Nginx反向代理在前後端分離項目中的一些優點：<br /><br />
+- **負載均衡**：Nginx可以作為反向代理在多個後端服務器間分發請求，從而實現負載均衡。這有助於提高系統的性能和可擴展性，因為多個服務器可以共同處理請求，減輕單個服務器的壓力。<br /><br />
+- **安全性**：通過反向代理，可以隱藏後端服務器的實際IP地址和結構，從而增加系統的安全性。此外，Nginx具有強大的安全功能，如DDoS防護和SSL/TLS終端。<br /><br />
+- **靜態資源緩存**：Nginx可以將靜態資源（如圖像、CSS和JavaScript文件）緩存到內存中，從而減少對後端服務器的請求量，提高網頁加載速度和性能。<br /><br />
+- **反向代理與Web服務器分離**：通過使用Nginx作為反向代理，可以將Web服務器（如Tomcat、Node.js等）與公共網絡分離，增加系統的安全性和可靠性。<br /><br />
+- **URL重寫**：Nginx可以通過URL重寫功能，對請求的URL進行修改和重寫，從而實現更靈活的URL管理和路由控制。<br /><br />
+總的來說，Nginx反向代理在前後端分離項目中具有關鍵的作用，可以提高系統的性能、安全性和可靠性，同時還能夠實現負載均衡和靜態資源緩存等功能，是現代Web應用開發中常用的技術之一。
+','https://i.imgur.com/QVbwPXD.png'),
+(2,'塑膠袋','<h2>塑膠袋，神仙之物：</h2><br /><h2>望之透明如無物；</h2><br /><h2>觸之絲滑如綢緞。</h2>','https://ct.yimg.com/xd/api/res/1.2/sY0iEeW_3tnaBTMPndPPPw--/YXBwaWQ9eXR3YXVjdGlvbnNlcnZpY2U7aD0yNTYxO3E9ODU7cm90YXRlPWF1dG87dz0yNDQ5/https://s.yimg.com/ob/image/be934b13-3d96-4012-95b7-4c85877fa70a.jpg'),
+(3,'Spring Security與JWT認證','# Spring Security與JWT認證<br /><br />
+在現代的Web應用開發中，安全性是至關重要的一環。Spring Security是一個強大且廣泛使用的安全框架，它提供了許多功能來保護應用程序免受各種攻擊。與此同時，JSON Web Token（JWT）作為一種輕量級且安全的身份驗證標準，被廣泛應用於跨平台的身份驗證和授權機制。<br /><br />
+## Spring Security的基礎<br /><br />
+Spring Security通過使用範圍、標記和過濾器來確保應用程序的安全性。它可以用於控制對URL的訪問權限、實現身份驗證和授權、管理用戶會話等。<br /><br />
+## JWT認證的優點<br /><br />
+JSON Web Token（JWT）是一種輕量級的、安全的身份驗證標準，具有以下優點：
+- **簡單且自包含**：JWT是一個簡單的token，它包含了用戶的身份信息以及相關的元數據，可以自我描述並且易於傳輸。
+- **無狀態性**：由於JWT包含了所有必要的信息，因此不需要在服務端保存用戶的會話狀態，可以實現無狀態的身份驗證。
+- **安全性**：JWT使用簽名來保護token的完整性，可以防止篡改和偽造。<br /><br />
+## Spring Security與JWT的集成<br /><br />
+Spring Security可以與JWT集成，實現基於token的身份驗證和授權機制。通常，這包括以下步驟：
+1. **生成JWT**：當用戶登錄成功時，服務端會生成一個JWT，包含用戶的身份信息和相關元數據，並將其返回給客戶端。
+2. **驗證JWT**：當客戶端發送請求時，將JWT放入請求的頭部或參數中。服務端會驗證JWT的有效性，包括檢查簽名、過期時間等。
+3. **授權檢查**：服務端可以根據JWT中包含的用戶信息進行授權檢查，確定用戶是否有權訪問特定的資源或執行特定的操作。<br /><br />
+## 結語<br /><br />
+Spring Security與JWT的集成提供了一個安全、無狀態的身份驗證機制，適用於各種現代Web應用開發場景。通過結合Spring Security的強大功能和JWT的輕量、安全特性，我們可以實現更安全、更可靠的身份驗證和授權機制，保護應用程序免受各種攻擊。<br /><br />
+這段文章簡要介紹了Spring Security與JWT認證的相關內容，希望對你有所幫助！
+','https://hashnode.com/utility/r?url=https:%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Fupload%2Fv1633101239445%2F1LPg4fxdV.png%3Fw%3D1200%26h%3D630%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp%26fm%3Dpng');
 
 INSERT INTO comment(user_id,post_id,content) VALUES
   (1, 1, '這篇文章很有啟發性，值得好好思考'),

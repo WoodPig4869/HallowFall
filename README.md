@@ -22,7 +22,7 @@ HallowFall-backend是一個包含會員功能和社群媒體（發文和留言�
     npm install
     ```
 3. 導入MySQL數據庫結構：
-    在MySQL中執行文件：`\initialize_database.sql`
+    在MySQL中執行初始化文件：`\initialize_database.sql`
 
 4. 設定SQL登入方式
     設定文件：`\HallowFall\backend\src\main\resources\application.properties`中的登入方式
