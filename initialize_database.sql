@@ -3,6 +3,10 @@ DROP DATABASE IF EXISTS HallowDB;
 CREATE DATABASE HallowDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE HallowDB;
 
+-- 預設登入身份初始化(!!!!!DROP 慎用!!!!!)
+DROP USER 'watcher'@'%';
+CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
+GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
 
 -- 創建使用者資料表
 CREATE TABLE IF NOT EXISTS user (
