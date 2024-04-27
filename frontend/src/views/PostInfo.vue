@@ -31,7 +31,7 @@
             <div class="container d-flex justify-content-center align-items-center">
                 <el-image :src=post.image fit="cover" class="img-fluid" style="max-width: 500px;" />
             </div>
-            <div id="editor" @click="setIsDataDirtyTrue">
+            <div id="editor">
                 <v-md-editor v-model="this.post.content" :mode="this.editorMode" placeholder="請輸入內容..."
                     @save="save()"></v-md-editor>
                 <el-upload ref="image" class="upload-demo" :limit="1" :on-change="handleFileChange1">
@@ -54,19 +54,10 @@
                     :disabled="(!newComment.content)">提交留言</button>
             </form>
             <div class="container mt-2">
-                <template v-for="comment in comments" :key="comment.comment_id">
-                    <el-card class="m-3" style="width: 100%;">
-                        <el-row justify="space-between">
-                            <el-col :span>
-                                <a :href="'/posts/' + comment.userId">{{ comment.nickname }}</a>
-                            </el-col>
-
-                            <el-col :h1="10"><br />{{ comment.content }}</el-col>
-                            <el-col :span="3"><br /></el-col>
-                            <el-col :span="6">發布日期：<br />{{ comment.createdAt }}</el-col>
-                        </el-row>
-                    </el-card>
-                </template>
+                <div v-for="comment in comments" :key="comment.commentId">
+                    <CommentCard :comment="comment" />
+                    
+                </div>
             </div>
 
         </div>
@@ -78,8 +69,13 @@ import axios from '@/axios';
 import Swal from 'sweetalert2';
 import { jwtDecode } from "jwt-decode";
 import DOMPurify from 'isomorphic-dompurify';
+import CommentCard from '@/components/CommentCard.vue';
+import router from '@/router';
 
 export default {
+    components: {
+        CommentCard,
+    },
     data() {
         return {
             postId: parseInt(this.$route.params.postId),
@@ -124,7 +120,7 @@ export default {
             const decoded = jwtDecode(token);
             const loggedUserId = parseInt(decoded.userId);
             const role = decoded.role;
-            if (this.post.userId == loggedUserId || role == "ROOT") {
+            if (this.post.userId == loggedUserId || role == "ROOT" || role == "ADMIN") {
                 this.postOwner = true;
                 // console.log(this.postOwner)
             }
@@ -132,7 +128,7 @@ export default {
         fetchComment() {
             axios.get(`/comment/${this.postId}`).then(response => {
                 this.comments = response.data
-                // console.log(this.comments)
+                console.log(this.comments)
             })
         },
         fetchPost() {
@@ -181,7 +177,7 @@ export default {
             }).then((result) => {
                 if (result.isConfirmed) {
                     axios.delete(`/post/${this.postId}`)
-                    window.location.href = '/posts'
+                    router.push({ path: '/posts' })
                 };
             })
         },
@@ -262,6 +258,7 @@ export default {
         },
         editorModeToggle() {
             this.editorMode = this.editorMode === 'preview' ? 'editable' : 'preview';
+            this.setIsDataDirtyTrue();
         },
     },
 }

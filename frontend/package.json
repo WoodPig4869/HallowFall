@@ -17,7 +17,6 @@
     "jwt-decode": "^4.0.0",
     "sweetalert2": "^11.10.7",
     "vue": "^3.4.21",
-    "vue-froala-wysiwyg": "^4.2.0",
     "vue-router": "^4.3.0",
     "vue-use-fixed-header": "^2.0.3"
   },

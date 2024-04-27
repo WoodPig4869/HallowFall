@@ -23,6 +23,16 @@ public class UserService {
         this.servletRequest = servletRequest;
     }
 
+    /**
+     * 根據 userId 找用戶(包含已刪除用戶)
+     * @param userId
+     * @return User
+     */
+    public User findById(Integer userId) {
+        return userRepository.findById(userId).orElseThrow();
+    }
+
+
     public boolean updateUser(User user) {
         try {
             //        找到當前用戶
@@ -70,7 +80,7 @@ public class UserService {
         return role.name();
     }
 
-    // id 轉換成用戶暱稱
+    // 根據 id 找用戶暱稱
     public String getNicknameById(Integer id) {
         User user = userRepository.findById(id).orElseThrow();
         return user.getNickname();

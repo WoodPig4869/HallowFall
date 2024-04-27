@@ -22,6 +22,7 @@
 import axios from '@/axios';
 import Swal from 'sweetalert2';
 import DOMPurify from 'isomorphic-dompurify';
+import router from '@/router';
 
 
 export default {
@@ -78,8 +79,6 @@ export default {
             try {
                 const response = await axios.post('/post', this.post);
                 if (response.status === 201) {
-                    await new Promise((resolve) => setTimeout(resolve, 550));
-
                     Swal.fire({
                         title: "儲存成功！",
                         icon: "success",
@@ -88,7 +87,7 @@ export default {
                         allowEscapeKey: false
                     });
                     // 跳轉到posts頁面
-                    window.location.href = '/posts'
+                    router.push({ path: '/posts' });
                 }
             } catch (error) {
                 await new Promise((resolve) => setTimeout(resolve, 850));

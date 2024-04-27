@@ -11,8 +11,8 @@ GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
 -- 創建使用者資料表
 CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY, -- 使用者 ID (Primary Key)
-    phone VARCHAR(100) UNIQUE NOT NULL, -- 電話(手機號碼)
-    email VARCHAR(100) UNIQUE, -- 電子郵件
+    phone VARCHAR(100) UNIQUE, -- 電話(手機號碼)
+    email VARCHAR(100) UNIQUE NOT NULL, -- 電子郵件
     password VARCHAR(255) NOT NULL,-- 密碼
     role VARCHAR(20) DEFAULT 'USER',-- 使用者權限
     deleted BOOLEAN DEFAULT FALSE, -- 刪除標記
@@ -67,13 +67,13 @@ CREATE TABLE IF NOT EXISTS comment(
 CREATE INDEX idx_post_id ON comment(post_id);
 
 -- 初始化測試資料(密碼皆為經過 BCrypt 雜湊的 123456)
-INSERT INTO user (phone,email,password,role,nickname,signature) VALUES
-('root','root@root.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','ROOT','Root管理者','<h3>歡迎使用本服務！</h3>'),
-('admin','admin@admin.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','ADMIN','王五','<h3>我不是張三。</h3>'),
-('0912345678','user@user.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','趙六','<h3>我不是李四。</h3>');
+INSERT INTO user (phone,email,password,role,nickname,signature,avatar) VALUES
+('root','root@root.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','ROOT','Root管理者','<h3>歡迎使用本服務！</h3>','https://cdn.pixabay.com/photo/2016/07/02/12/21/eclipse-1492818_1280.jpg'),
+('admin','admin@admin.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','ADMIN','王五','<h3>我不是張三。</h3>','https://cdn.pixabay.com/photo/2022/05/23/07/03/woman-7215421_1280.jpg'),
+('0912345678','user@user.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','趙六','<h3>我不是李四。</h3>','https://cdn.pixabay.com/photo/2022/07/24/23/46/artificial-intelligence-7342613_1280.jpg');
 
 INSERT INTO post(user_id,title,content,image) VALUES
-(1,'Nginx反向代理','# Nginx反向代理在前後端分離項目中的優點<br /><br />
+(1,'伺服器 Nginx 反向代理','# Nginx反向代理在前後端分離項目中的優點<br /><br />
 Nginx反向代理是一種在網絡架構中使用的技術，它通過將客戶端的請求轉發給後端服務器，然後將後端服務器的響應返回給客戶端，來實現對後端服務器的代理。相比於正向代理，反向代理是指用於伺服器端的代理。<br /><br />
 以下是Nginx反向代理在前後端分離項目中的一些優點：<br /><br />
 - **負載均衡**：Nginx可以作為反向代理在多個後端服務器間分發請求，從而實現負載均衡。這有助於提高系統的性能和可擴展性，因為多個服務器可以共同處理請求，減輕單個服務器的壓力。<br /><br />
@@ -84,7 +84,7 @@ Nginx反向代理是一種在網絡架構中使用的技術，它通過將客戶
 總的來說，Nginx反向代理在前後端分離項目中具有關鍵的作用，可以提高系統的性能、安全性和可靠性，同時還能夠實現負載均衡和靜態資源緩存等功能，是現代Web應用開發中常用的技術之一。
 ','https://i.imgur.com/QVbwPXD.png'),
 (2,'塑膠袋','<h2>塑膠袋，神仙之物：</h2><br /><h2>望之透明如無物；</h2><br /><h2>觸之絲滑如綢緞。</h2>','https://ct.yimg.com/xd/api/res/1.2/sY0iEeW_3tnaBTMPndPPPw--/YXBwaWQ9eXR3YXVjdGlvbnNlcnZpY2U7aD0yNTYxO3E9ODU7cm90YXRlPWF1dG87dz0yNDQ5/https://s.yimg.com/ob/image/be934b13-3d96-4012-95b7-4c85877fa70a.jpg'),
-(3,'Spring Security與JWT認證','# Spring Security與JWT認證<br /><br />
+(3,' Spring Security 與 JWT 認證','# Spring Security與JWT認證<br /><br />
 在現代的Web應用開發中，安全性是至關重要的一環。Spring Security是一個強大且廣泛使用的安全框架，它提供了許多功能來保護應用程序免受各種攻擊。與此同時，JSON Web Token（JWT）作為一種輕量級且安全的身份驗證標準，被廣泛應用於跨平台的身份驗證和授權機制。<br /><br />
 ## Spring Security的基礎<br /><br />
 Spring Security通過使用範圍、標記和過濾器來確保應用程序的安全性。它可以用於控制對URL的訪問權限、實現身份驗證和授權、管理用戶會話等。<br /><br />

@@ -36,6 +36,12 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
     (response) => {
         // statusCode: 200-299
+        if (response.status === 201) {
+            ElMessage.success("新增成功");
+            return response.data;
+        }else if (response.status === 204) {
+            ElMessage.success("操作成功");
+        }
         return response;
     },
     (error) => {
