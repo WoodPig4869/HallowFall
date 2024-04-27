@@ -59,7 +59,7 @@ public class User implements UserDetails {
     //Phone 取代 spring security 的 username
     @Override
     public String getUsername() {
-        return this.phone;
+        return this.email;
     }
 
     @Override

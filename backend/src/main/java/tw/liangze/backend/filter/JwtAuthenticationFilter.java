@@ -45,13 +45,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 //        從 Authorization 字段中提取 JWT Token
         String token = authHeader.substring(7);
-//        從 JWT Token中提取 username (獲得 phone)
+//        從 JWT Token中提取 username (獲得 email)
         String username = jwtService.extractUsername(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
+//            從資料庫中查詢使用者詳細資料
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
 //            驗證 JWT Token是否有效
             if (jwtService.isValid(token, userDetails)) {
 //            建立一個新的 UsernamePasswordAuthenticationToken ,設置其詳細信息

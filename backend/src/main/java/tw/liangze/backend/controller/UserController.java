@@ -1,5 +1,7 @@
 package tw.liangze.backend.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,13 +24,25 @@ public class UserController {
         this.userRepository = userRepository;
         this.userService = userService;
     }
-//查詢帳號(包含已刪除)，存在回傳True，不存在回傳False
-    @GetMapping("/check/phone/{phone}")
-    public boolean getUser(@PathVariable("phone") String phone) {
-        Optional<User> userOptional = userRepository.findByPhone(phone);
-        return userOptional.isPresent(); // 如果有值則返回 true，否則返回 false
+
+    /**
+     * 查詢 Email 是否存在
+     *
+     * @param email
+     * @return 存在回傳 http status 200, 不存在回傳 http status 404
+     */
+    @GetMapping("/checkEmail/{email}")
+    public ResponseEntity<String> checkEmail(@PathVariable("email") String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-//    檢查是否已登入
+
+
+    //    檢查是否已登入
     @GetMapping("/check/login")
     public boolean checkLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -37,27 +51,33 @@ public class UserController {
         }
         return false;
     }
-//    查詢全部會員
+
+    //    查詢全部會員
     @GetMapping("/api")
-    public Iterable<User> getAllUsers(){
+    public Iterable<User> getAllUsers() {
         return userRepository.findAllByDeletedFalse();
     }
-//    根據id查詢會員
+
+    //    根據id查詢會員
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") int userId){
+    public User getUserById(@PathVariable("id") int userId) {
         return userRepository.findByUserIdAndDeletedFalse(userId).orElseThrow();
     }
-//    查詢自己
-@GetMapping("/self")
-public User getSelfUser(){
-//    找到當前用戶
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return userRepository.findByPhone(authentication.getName()).orElseThrow();
-}
 
-//    修改自己
-@PutMapping("/self")
-public boolean updateUser(@RequestBody User user){
+    //    查詢自己
+    @GetMapping("/self")
+    public ResponseEntity<User> getSelfUser() {
+        User user = userService.getSelf();
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
+    }
+
+
+    //    修改自己
+    @PutMapping("/self")
+    public boolean updateUser(@RequestBody User user) {
         return userService.updateUser(user);
-}
+    }
 }

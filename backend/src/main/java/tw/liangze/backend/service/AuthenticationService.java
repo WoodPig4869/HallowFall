@@ -10,21 +10,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tw.liangze.backend.model.AuthenticationResponse;
 import tw.liangze.backend.model.User;
+import tw.liangze.backend.repository.UserLogRepository;
 import tw.liangze.backend.repository.UserRepository;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserLogRepository userLogRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final HttpServletRequest servletRequest;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, HttpServletRequest servletRequest) {
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserLogRepository userLogRepository, JwtService jwtService, AuthenticationManager authenticationManager, HttpServletRequest servletRequest) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userLogRepository = userLogRepository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.servletRequest = servletRequest;
@@ -32,35 +36,40 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse register(User request) {
-        if (request == null || request.getPassword() == null || request.getNickname() == null ||
+//        檢查輸入資料是否為空
+        if (request.getEmail() == null || request.getPassword() == null || request.getNickname() == null ||
                 request.getPassword().isEmpty() || request.getNickname().isEmpty()) {
-            return new AuthenticationResponse("register error");
+            return null;
         }
-
-        if (checkPhone(request.getPhone())) {
-            return new AuthenticationResponse("Phone number already exists");
+//        檢查電子信箱是否已被註冊
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            return null;
         }
+//        註冊
+        userRepository.insertUser(request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getNickname());
 
-        userRepository.insertUser(request.getPhone(), passwordEncoder.encode(request.getPassword()), request.getNickname());
-
-        Optional<User> optUser = userRepository.findByPhoneAndDeletedFalse(request.getPhone());
-        User saveUser = optUser.orElseThrow();
-        String token = jwtService.generateToken(saveUser);
+        User NewUser = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        String token = jwtService.generateToken(NewUser);
         return new AuthenticationResponse(token);
     }
 
-    public AuthenticationResponse authenticate(User request) {
+    public AuthenticationResponse authenticate(Map<String, String> request) {
         String status = "登入成功";
+        String username = request.get("username");
+        int userId = 0;
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getPhone(),
-                            request.getPassword()
+                            username,
+                            request.get("password")
                     )
             );
+            User user = (isValidEmail(username))
+                    ? userRepository.findByEmail(username).orElseThrow()
+                    : userRepository.findByPhone(username).orElseThrow();
 
-            User user = userRepository.findByPhoneAndDeletedFalse(request.getPhone()).orElseThrow();
             String token = jwtService.generateToken(user);
+            userId = user.getUserId();
 
             return new AuthenticationResponse(token);
         } catch (AuthenticationException e) {
@@ -71,7 +80,7 @@ public class AuthenticationService {
             if (ip == null) {
                 ip = "unknown";
             }
-            userRepository.insertUserLog(request.getPhone(), ip, status);
+            userLogRepository.insertUserLog(userId, ip, status);
         }
     }
 
@@ -79,5 +88,12 @@ public class AuthenticationService {
         return userRepository.findByPhone(phone).isPresent();
     }
 
+    public boolean checkEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    private boolean isValidEmail(String email) {
+        return email.contains("@");
+    }
 
 }

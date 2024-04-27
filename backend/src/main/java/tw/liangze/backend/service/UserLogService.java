@@ -14,18 +14,17 @@ import java.util.List;
 public class UserLogService {
 
     private  final UserLogRepository userLogRepository;
-    private  final UserRepository userRepository;
+    private  final UserService userService;
 
-    public UserLogService(UserLogRepository userLogRepository, UserRepository userRepository) {
+    public UserLogService(UserLogRepository userLogRepository, UserService userService) {
         this.userLogRepository = userLogRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
+
     public List<UserLog> findTop50() {
-        //        找到當前用戶
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User targetUser = userRepository.findByPhone(authentication.getName()).orElseThrow();
-        Integer targetUserId = targetUser.getUserId();
+        //        找到當前用戶userId
+        Integer targetUserId = userService.getSelfId();
 
         return userLogRepository.findTop50ByUserIdOrderByTimeDesc(targetUserId);
     }

@@ -19,9 +19,16 @@ public class UserDetailsServiceImp implements UserDetailsService {
     //實現loadUserByUsername方法，用來取得使用者的資料
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //使用者查詢，username為spring security 登入帳號預設變數名，Phone 為此專案應用的登入帳號
-        return repository.findByPhoneAndDeletedFalse(username)
-                //找不到使用者，則拋出 UsernameNotFoundException 異常
-                .orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        boolean isValidEmail = isValidEmail(username);
+        if (isValidEmail) {
+            return repository.findByEmailAndDeletedFalse(username).orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
+        } else {
+            return repository.findByPhoneAndDeletedFalse(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        }
+    }
+    // 判斷是否符合 email 格式的方法，可以根據實際需求進行調整
+    private boolean isValidEmail(String email) {
+        // 簡單檢查是否包含 @ 符號
+        return email.contains("@");
     }
 }

@@ -23,7 +23,7 @@ public class JwtService {
     //    用以簽發和驗證 JWT Token
     private final String SECRET_KEY = "b64f3dbdc3d16f585b858d8fd66faa42420921f1047b07ae7e93123f106416e2";
 
-    //    從 JWT Token 中提取使用者名稱(這裡的 username 是 phone 值)
+    //    從 JWT Token 中提取使用者名稱(這裡的 username 是 email 值)
     public String extractUsername(String token) {
         return extracClaim(token, Claims::getSubject);
     }
@@ -60,7 +60,7 @@ public class JwtService {
     public String generateToken(User user) {
         String token = Jwts
                 .builder()
-                .setSubject(user.getUsername())//設定Token的主旨(username)
+                .setSubject(user.getEmail())//設定Token的主旨(username)
                 .claim("userId", user.getUserId())//將 userId 存入 Claim
                 .claim("nickname", user.getNickname())//將 nickname 存入 Claim
                 .claim("registrationDate", dateFormat.format(user.getRegistrationDate()))

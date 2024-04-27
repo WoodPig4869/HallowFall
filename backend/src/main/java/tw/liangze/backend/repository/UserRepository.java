@@ -10,15 +10,21 @@ public interface UserRepository extends JpaRepository <User, Integer> {
 
     Optional<User> findByPhone(String phone);
 
+    Optional<User> findByUserId(Integer userId);
+
+    Optional<User> findByEmail(String email);
+
     Optional<User> findByPhoneAndDeletedFalse(String phone);
+
+    Optional<User> findByEmailAndDeletedFalse(String username);
 
     Optional<User> findByUserIdAndDeletedFalse(Integer userId);
 
     @Procedure(name = "insertUser")
-    void insertUser(String newPhone, String newPassword, String newNickname);
+    void insertUser(String newEmail, String newPassword, String newNickname);
 
-    @Procedure(name="insertUserLog")
-    void insertUserLog(String newPhone, String newIP,String newStatus);
 
     Iterable<User> findAllByDeletedFalse();
+
+
 }

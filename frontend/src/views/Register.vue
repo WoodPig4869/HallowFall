@@ -1,135 +1,155 @@
 <template>
-  <div class="container mt-3" style="max-width: 400px;">
-    <h1 class="mb-4">註冊</h1>
-    <form @submit.prevent="register" class="needs-validation" novalidate>
-      <div class="mb-3" style="text-align: left;">
-        <label for="phone" class="form-label">行動電話：</label>
-        <input type="text" id="phone" class="form-control" v-model="phone" @blur="checkPhone" required>
-        <p v-if="!phoneCheck" class="text-success">電話可用</p>
-        <p class="text-danger">{{ phoneCheckError }}</p>
+  <div v-loading="loading">
+    <h2 class="text-center mb-3">會員註冊</h2>
+    <div class="container mt-2 d-flex justify-content-center">
+      <div class="container" style="max-width: 420px;">
+        <el-form ref="ruleFormRef" style="max-width: 800px" :model="ruleForm" status-icon :rules="rules"
+          label-width="auto" size="large" labelPosition="top">
+          <el-form-item label="電子信箱" prop="email">
+            <el-input v-model="ruleForm.email" maxlength="30" />
+          </el-form-item>
+          <el-form-item label="密碼" prop="pass">
+            <el-input v-model="ruleForm.password" type="password" autocomplete="off" maxlength="30" />
+          </el-form-item>
+          <el-form-item label="確認密碼" prop="checkPass">
+            <el-input v-model="ruleForm.checkPass" type="password" autocomplete="off" maxlength="30" />
+          </el-form-item>
+          <el-form-item label="暱稱" prop="nickname">
+            <el-input v-model="ruleForm.nickname" maxlength="30" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm(ruleFormRef)">送出</el-button>
+            <el-button @click="resetForm(ruleFormRef)">重置</el-button>
+          </el-form-item>
+        </el-form>
       </div>
-      <div class="mb-3" style="text-align: left;">
-        <label for="password" class="form-label">密碼：</label>
-        <input type="password" id="password" class="form-control" v-model="password" required>
-      </div>
-      <div class="mb-3" style="text-align: left;">
-        <label for="confirmPassword" class="form-label">確認密碼：</label>
-        <input type="password" id="confirmPassword" class="form-control" v-model="confirmPassword" required>
-      </div>
-      <div class="mb-3" style="text-align: left;">
-        <label for="nickname" class="form-label">暱稱：</label>
-        <input type="text" id="nickname" class="form-control" v-model="nickname" required>
-      </div>
-      <button type="submit" class="btn btn-success btn-lg w-100" :class="{ 'disabled': phoneCheck }">註冊</button>
-      <span v-if="registerError" class="text-danger">{{ registerError }}</span>
-    </form>
-    <div class="text-center mt-3">
-      <router-link to="/login">已有帳號？ 點擊登入</router-link>
     </div>
   </div>
 </template>
 
-<script>
-import Swal from 'sweetalert2'
-import axios from '@/axios';
+<script lang="ts" setup>
+import { reactive, ref } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import axios from '@/axios'
+import DOMPurify from 'isomorphic-dompurify';
+import { ElMessage } from "element-plus";
+import router from '@/router';
 
-export default {
-  data() {
-    return {
-      phone: '',
-      password: '',
-      confirmPassword: '',
-      nickname: '',
-      registerError: '',
-      phoneCheck: true,
-      phoneCheckError: '',
-    };
-  },
-  methods: {
-    async checkPhone() {
-      const phoneRegex = /^\d{10}$/; // 正則表達式，要求為 10 個數字
-      if (!phoneRegex.test(this.phone)) {
-        this.phoneCheckError = '電話格式錯誤';
-        return;
-      }
+const loading = ref(false)
+const ruleFormRef = ref<FormInstance>()
 
-      const response = await axios.get(`/user/check/phone/${this.phone}`);
-      // true 代表已被註冊, false 代表未被註冊
-      this.phoneCheck = response.data;
-      if (this.phoneCheck) {
-        this.phoneCheckError = '電話已被註冊';
-        return;
-      }
-      this.phoneCheckError = '';
-    },
-    async register() {
-      this.registerError = '';
-      // 驗證表單
-      if (!this.phone || !this.password || !this.confirmPassword || !this.nickname) {
-        this.registerError = '請填寫所有欄位'
-        return;
-      }
-      if (this.password !== this.confirmPassword) {
-        this.registerError = '密碼不一致'
-        return;
-      }
-      let timerInterval;
-      Swal.fire({
-        title: "註冊中...",
-        html: "請稍後",
-        timerProgressBar: true,
-        timer: 900,
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        didOpen: () => {
-          Swal.showLoading();
-          const timer = Swal.getPopup().querySelector(".swal2-progress-bar");
-          timerInterval = setInterval(() => {
-            timer.style.width = `${Swal.getTimerLeft()}%`;
-          }, 100);
-        },
-      }).then((result) => {
-        /* Read more about handling dismissals below */
-        if (result.dismiss === Swal.DismissReason.timer) {
-          console.log("I was closed by the timer");
-        }
-      });
-      try {
-        const response = await axios.post('/register', {
-          phone: this.phone,
-          password: this.password,
-          nickname: this.nickname,
-        });
+const checkEmail = (rule: any, value: any, callback: any) => {
+  if (!value) {
+    return callback(new Error('請輸入電子郵件地址'))
+  }
 
-        await new Promise((resolve) => setTimeout(resolve, 850));
-
-        if (response.status === 200) {
-          const token = response.data.token;
-          localStorage.setItem('Authorization', `Bearer ${token}`);
-          // 註冊成功，顯示成功提示
-          Swal.fire({
-            title: "註冊成功！",
-            icon: "success",
-            confirmButtonText: "確認",
-            allowOutsideClick: false,
-            allowEscapeKey: false
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = '/content';
-            }
-          });
-        }
-      } catch (error) {
-        await new Promise((resolve) => setTimeout(resolve, 850));
-        console.error('註冊錯誤:', error);
-        Swal.fire({
-          title: "註冊失敗",
-          text: "註冊時發生錯誤",
-          icon: "error",
-          confirmButtonText: "確認",
-        });
+  axios.get(`/user/checkEmail/${ruleForm.email}`)
+    .then(response => {
+      if (response.status === 200) {
+        callback(new Error('該電子郵件地址已被註冊'));
+      } else if (response.status === 404) {
+        callback();
+      } else {
+        callback(new Error('發生錯誤'));
       }
-    },
-  },
-};
+    })
+
+  setTimeout(() => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    if (!emailRegex.test(value)) {
+      callback(new Error('請輸入正確的電子郵件地址'))
+    } else {
+      callback()
+    }
+  }, 1000)
+}
+
+const validatePass = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('請輸入密碼'))
+  } else {
+    if (ruleForm.checkPass !== '') {
+      if (!ruleFormRef.value) return
+      ruleFormRef.value.validateField('checkPass', () => null)
+    }
+    callback()
+  }
+}
+
+const validatePass2 = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('請再次輸入密碼'))
+  } else if (value !== ruleForm.password) {
+    callback(new Error('兩次輸入的密碼不相符'))
+  } else {
+    callback()
+  }
+}
+
+const checkNickname = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('請輸入暱稱'))
+  } else {
+    callback()
+  }
+}
+
+const ruleForm = reactive({
+  password: '',
+  checkPass: '',
+  email: '',
+  nickname: '',
+})
+
+const rules = reactive<FormRules<typeof ruleForm>>({
+  password: [{ validator: validatePass, trigger: 'blur' }],
+  checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+  email: [{ validator: checkEmail, trigger: 'blur' }],
+  nickname: [{ validator:checkNickname, trigger: 'blur' }],
+})
+
+const submitForm = async (formEl: FormInstance | undefined) => {
+  // 在發送請求前顯示 loading 狀態
+  loading.value = true;
+  if (!formEl) return
+  const valid = await new Promise<boolean>((resolve) => {
+    formEl.validate((valid) => {
+      resolve(valid);
+    });
+  });
+
+  if (valid) {
+    // 使用 DOMpurify 防禦 XSS
+    ruleForm.email = DOMPurify.sanitize(ruleForm.email)
+    ruleForm.password = DOMPurify.sanitize(ruleForm.password)
+    ruleForm.nickname = DOMPurify.sanitize(ruleForm.nickname)
+
+    try {
+      const response = await axios.post('/register', ruleForm);
+      console.log(response.status);
+      if (response.status === 201) {
+        ElMessage.success("註冊成功");
+        // 登入成功，將 JWT token 存入 localStorage
+        console.log(response.data.token);
+        localStorage.setItem('Authorization', `Bearer ${response.data.token}`);
+        // 導向到/content
+        router.push('/content');
+      }
+    } catch (error) {
+      ElMessage.error("註冊失敗");
+    } finally {
+      // 無論請求成功或失敗，都將 loading 狀態設置為 false
+      loading.value = false;
+    }
+    
+  } else {
+    return false;
+  }
+}
+
+
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
 </script>

@@ -3,12 +3,13 @@
     <h1 class="mb-4">登入</h1>
     <form @submit.prevent="login" class="needs-validation" novalidate>
       <div class="mb-3" style="text-align: left;">
-        <label for="phone" class="form-label">行動電話：</label>
-        <input type="text" id="phone" class="form-control" v-model="phone" placeholder="手機號碼" @change="checkNull" required>
+        <label for="username" class="form-label"></label>
+        <input type="text" id="username" class="form-control" v-model="this.username" placeholder="手機號碼 / 電子信箱" @change="checkNull"
+          required>
       </div>
       <div class="mb-3" style="text-align: left;">
-        <label for="password" class="form-label">密碼：</label>
-        <input type="password" id="password" class="form-control" v-model="password" @change="checkNull" required>
+        <label for="password" class="form-label"></label>
+        <input type="password" id="password" class="form-control" v-model="password" placeholder="密碼" @change="checkNull" required>
       </div>
       <button type="submit" class="btn btn-primary btn-lg w-100" :disabled="loginBtnDisabled">送出</button>
       <span v-if="loginError" class="text-danger">{{ loginError }}</span>
@@ -26,7 +27,7 @@ import axios from '@/axios';
 export default {
   data() {
     return {
-      phone: '',
+      username: '',
       password: '',
       loginError: '',
       loginBtnDisabled: true,
@@ -35,13 +36,12 @@ export default {
   methods: {
     checkNull() {
       this.loginBtnDisabled = true;
-      if (this.phone !== '' && this.password !== '') {
+      if (this.username !== '' && this.password !== '') {
         this.loginBtnDisabled = false;
       }
 
     },
     async login() {
-      let timerInterval;
       Swal.fire({
         title: "登入中...",
         html: "請稍後",
@@ -65,7 +65,7 @@ export default {
       try {
         localStorage.removeItem('Authorization');
         const response = await axios.post('/login', {
-          phone: this.phone,
+          username: this.username,
           password: this.password,
         });
 

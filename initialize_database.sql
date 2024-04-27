@@ -3,10 +3,9 @@ DROP DATABASE IF EXISTS HallowDB;
 CREATE DATABASE HallowDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE HallowDB;
 
--- 預設登入身份初始化(!!!!!DROP 慎用!!!!!)
-DROP USER 'watcher'@'%';
-CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
-GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
+-- 後端登入身份初始化
+-- CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
+-- GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
 
 -- 創建使用者資料表
 CREATE TABLE IF NOT EXISTS user (
@@ -122,31 +121,24 @@ INSERT INTO comment(user_id,post_id,content) VALUES
 
 -- 創建User Stored Procedure 用以註冊
 CREATE PROCEDURE InsertUser (
-  IN newPhone VARCHAR(100),
+  IN newEmail VARCHAR(100),
   IN newPassword VARCHAR(255),
   IN newNickname VARCHAR(50)
 )
 BEGIN
-  INSERT INTO user (phone, password, nickname) VALUES (newPhone, newPassword, newNickname);
+  INSERT INTO user (email, password, nickname) VALUES (newEmail, newPassword, newNickname);
 END;
 
 -- 創建User_log Stored Procedure 用以紀錄log
 CREATE PROCEDURE InsertUserLog (
-  IN newPhone VARCHAR(100),
+  IN newUserId int,
   IN newIP VARCHAR(50),
   IN newStatus VARCHAR(15)
 )
 BEGIN
-  DECLARE userId INT;
-
-  -- 根據 phone 查找對應的 user_id
-  SELECT user_id INTO userId FROM user WHERE phone = newPhone;
-
-  -- 如果找到對應的 user_id，則插入 user_log 記錄
-  IF userId IS NOT NULL THEN
-    INSERT INTO user_log (user_id, status, ip_address) VALUES (userId, newStatus, newIP);
-  END IF;
+    INSERT INTO user_log (user_id, ip_address,status) VALUES (newUserId,newIP, newStatus);
 END;
+
 
 -- 創建Post Stored Procedure 用以發文
 CREATE PROCEDURE InsertPost (

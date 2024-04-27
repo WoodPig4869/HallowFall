@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tw.liangze.backend.model.Role;
 import tw.liangze.backend.model.User;
+import tw.liangze.backend.repository.UserLogRepository;
 import tw.liangze.backend.repository.UserRepository;
 
 @Service
@@ -15,13 +16,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final HttpServletRequest servletRequest;
+    private final UserLogRepository userLogRepository;
 
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, HttpServletRequest servletRequest) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, HttpServletRequest servletRequest, UserLogRepository userLogRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.servletRequest = servletRequest;
+        this.userLogRepository = userLogRepository;
     }
+
 
     /**
      * 根據 userId 找用戶(包含已刪除用戶)
@@ -36,15 +39,14 @@ public class UserService {
     public boolean updateUser(User user) {
         try {
             //        找到當前用戶
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User targetUser = userRepository.findByPhone(authentication.getName()).orElseThrow();
+            User targetUser = getSelf();
             //        更新用戶資料
             if (user.getPassword() != null) {
                 String ip = servletRequest.getHeader("X-Forwarded-For");
                 if (ip == null) {
                     ip = "unknown";
                 }
-                userRepository.insertUserLog(targetUser.getPhone(), ip, "修改密碼");
+                userLogRepository.insertUserLog(targetUser.getUserId(), ip, "修改密碼");
                 targetUser.setPassword(passwordEncoder.encode(user.getPassword()));
             }
             if (user.getEmail() != null)
@@ -67,15 +69,13 @@ public class UserService {
 
     // 找到當前用戶id
     public Integer getSelfId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByPhone(authentication.getName()).orElseThrow();
+        User user = getSelf();
         return user.getUserId();
     }
 
     // 找到當前用戶 Role
     public String getSelfRole() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByPhone(authentication.getName()).orElseThrow();
+        User user = getSelf();
         Role role = user.getRole();
         return role.name();
     }
@@ -84,5 +84,16 @@ public class UserService {
     public String getNicknameById(Integer id) {
         User user = userRepository.findById(id).orElseThrow();
         return user.getNickname();
+    }
+
+//    找到當前用戶
+    public User getSelf() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            return userRepository.findByEmail(authentication.getName()).orElseThrow();
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
