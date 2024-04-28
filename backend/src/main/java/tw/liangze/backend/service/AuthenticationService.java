@@ -55,21 +55,26 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(Map<String, String> request) {
         String status = "登入成功";
-        String username = request.get("username");
-        int userId = 0;
+        String username =request.get("username");
+        String password = request.get("password");
+
+        User user = null;
+        if (isValidEmail(username)) { // 判断是否为有效的邮箱
+            user = userRepository.findByEmailAndDeletedFalse(username).orElseThrow(() -> new RuntimeException("User not found"));
+        } else {
+            user = userRepository.findByPhoneAndDeletedFalse(username).orElseThrow(() -> new RuntimeException("User not found"));
+        }
+        int userId = user.getUserId();
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             username,
-                            request.get("password")
+                            password
                     )
             );
-            User user = (isValidEmail(username))
-                    ? userRepository.findByEmail(username).orElseThrow()
-                    : userRepository.findByPhone(username).orElseThrow();
 
             String token = jwtService.generateToken(user);
-            userId = user.getUserId();
 
             return new AuthenticationResponse(token);
         } catch (AuthenticationException e) {

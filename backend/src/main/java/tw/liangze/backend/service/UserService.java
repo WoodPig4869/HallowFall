@@ -36,6 +36,11 @@ public class UserService {
     }
 
 
+    /**
+     * 修改自己的用戶資料
+     * @param user
+     * @return 成功 true 失敗 false，如果有更改密碼，記錄操作 log
+     */
     public boolean updateUser(User user) {
         try {
             //        找到當前用戶
@@ -49,8 +54,13 @@ public class UserService {
                 userLogRepository.insertUserLog(targetUser.getUserId(), ip, "修改密碼");
                 targetUser.setPassword(passwordEncoder.encode(user.getPassword()));
             }
-            if (user.getEmail() != null)
-                targetUser.setEmail(user.getEmail());
+            if (user.getPhone() != null) {
+                //        確認電話號碼是否已被使用
+                if (userRepository.findByPhone(user.getPhone()).isPresent()) {
+                    return false;
+                }
+                targetUser.setPhone(user.getPhone());
+            }
             if (user.getNickname() != null)
                 targetUser.setNickname(user.getNickname());
             if (user.getSignature() != null)

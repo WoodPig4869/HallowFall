@@ -27,7 +27,6 @@ public class UserController {
 
     /**
      * 查詢 Email 是否存在
-     *
      * @param email
      * @return 存在回傳 http status 200, 不存在回傳 http status 404
      */
@@ -41,22 +40,26 @@ public class UserController {
         }
     }
 
-
-    //    檢查是否已登入
-    @GetMapping("/check/login")
-    public boolean checkLogin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
-            return authentication.isAuthenticated();
+    /**
+     * 查詢 Phone 是否存在
+     * @param phone
+     * @return 存在回傳 http status 200, 不存在回傳 http status 404
+     */
+    @GetMapping("/checkPhone/{phone}")
+    public ResponseEntity<String> checkPhone(@PathVariable("phone") String phone) {
+        Optional<User> user = userRepository.findByPhone(phone);
+        if (user.isPresent()) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
-        return false;
     }
 
     //    查詢全部會員
-    @GetMapping("/api")
-    public Iterable<User> getAllUsers() {
-        return userRepository.findAllByDeletedFalse();
-    }
+//    @GetMapping("/all")
+//    public Iterable<User> getAllUsers() {
+//        return userRepository.findAllByDeletedFalse();
+//    }
 
     //    根據id查詢會員
     @GetMapping("/{id}")
@@ -77,7 +80,9 @@ public class UserController {
 
     //    修改自己
     @PutMapping("/self")
-    public boolean updateUser(@RequestBody User user) {
-        return userService.updateUser(user);
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
+        return userService.updateUser(user)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

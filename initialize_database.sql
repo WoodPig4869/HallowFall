@@ -4,8 +4,8 @@ CREATE DATABASE HallowDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE HallowDB;
 
 -- 後端登入身份初始化
-CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
-GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
+-- CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
+-- GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
 
 -- 創建使用者資料表
 CREATE TABLE IF NOT EXISTS user (

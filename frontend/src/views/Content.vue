@@ -6,12 +6,15 @@
                 <div class="card">
                     <div class="card-header">個人資料</div>
                     <div class="d-flex align-items-center justify-content-center mb-3 mt-4">
-                        <img id="avatarImg" :src="userInfo.avatar" class="rounded-circle border border-dark me-3"
-                            style="max-width: 20%;" />
+                        <div class="avatar-container">
+                            <el-avatar id="avatarImg" :src="userInfo.avatar"
+                                class="rounded-circle border border-dark me-2" style="width: auto; height: 160px;"
+                                fit="cover" />
+                        </div>
                         <div class="d-flex flex-column" style="max-width: 75%;">
-                            <div class="mb-3 ">
-                                <el-input v-model="userInfo.phone" disabled>
-                                    <template #prepend>手機號碼</template>
+                            <div class="mb-3">
+                                <el-input v-model="userInfo.email" @change="setIsDataDirtyTrue" disabled>
+                                    <template #prepend>電子郵箱</template>
                                 </el-input>
                             </div>
                             <div class="mb-3">
@@ -25,9 +28,12 @@
                                 </el-input>
                             </div>
                             <div class="mb-3">
-                                <el-input v-model="userInfo.email" placeholder="請輸入電子郵箱" @change="setIsDataDirtyTrue">
-                                    <template #prepend>電子郵箱</template>
-                                </el-input>
+                                <div class="mb-3 ">
+                                    <el-input v-model="userInfo.phone">
+                                        <template #prepend>手機號碼</template>
+                                    </el-input>
+                                </div>
+
                             </div>
                         </div>
                         <el-image :src="userInfo.coverImage" class="me-3 d-none d-sm-block" fit="fill"

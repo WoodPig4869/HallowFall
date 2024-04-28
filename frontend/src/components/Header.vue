@@ -28,16 +28,16 @@
         </ul>
         <div class="d-flex me-3 align-items-center">
           <div class="me-5" v-if="isLoggedIn">
-            <h4 id="nickname-header" class="mt-2"></h4>
+            <h4 class="mt-2">{{ nickname }}</h4>
           </div>
           <div class="me-5" v-if="isLoggedIn">
             <router-link to="/content">
-              <img id="avatar-header" src="/avatar.png" class="rounded-circle border " style="width: 80px;" />
+              <img :src="avatar" class="rounded-circle border " style="width: 80px;" />
             </router-link>
           </div>
           <a v-if="!isLoggedIn" class="btn btn-outline-success btn-lg" href="/register">註冊</a>
-          <a v-if="!isLoggedIn" class="btn btn-primary btn-lg" href="/login">登入</a>
-          <a v-else class="btn btn-secondary btn-lg" @click="logout()">登出</a>
+          <a v-if="!isLoggedIn" class=" btn btn-primary btn-lg" href="/login">登入</a>
+          <a v-if="isLoggedIn" class="btn btn-secondary btn-lg" @click="logout()">登出</a>
         </div>
       </div>
     </div>
@@ -52,31 +52,27 @@
 import { ref ,onMounted} from 'vue'
 import axios from '@/axios';
 import Swal from 'sweetalert2';
-
-
+import router from '@/router';
+import { ElMessage } from 'element-plus';
 
 // 使用ref創建響應式變數
-const isLoggedIn = ref(false)
+const avatar = ref<string>('');
+const nickname = ref<string>('');
+const isLoggedIn = ref(false);
+
 // 在組建加載時檢查登入狀態
 onMounted(async () => {
-  try {
-    const response = await axios.get('/user/check/login');
-    isLoggedIn.value = response.data;
-  } catch (error) {
-    console.error('Failed to check login status:', error);
+  const token = localStorage.getItem('Authorization');
+  if (token) {
+    isLoggedIn.value = true;
   }
-  if (isLoggedIn.value===true) {
+
     const response = await axios.get('/user/self');
-    const nickname = response.data.nickname;
-    const nicknameElement = document.getElementById('nickname-header');
-    if (nicknameElement) {
-      nicknameElement.textContent = nickname;
+    nickname.value = response.data.nickname;
+    avatar.value = response.data.avatar;
+    if (avatar.value == null) {
+      avatar.value = '/avatar.png';
     }
-    const avatar = response.data.avatar;
-    if (avatar!==null) {
-      document.getElementById('avatar-header').setAttribute('src', avatar);
-    }
-  }
 });
 
 // 登出方法
@@ -91,7 +87,8 @@ const logout = async ()=>{
   }).then((result) => {
     if (result.isConfirmed) {
       localStorage.removeItem('Authorization');
-      window.location.href = '/';
+      ElMessage.info("已登出");
+      router.push({ path: '/' });
     }
   });
 

@@ -1,5 +1,5 @@
 <template>
-    <div @click="setIsDataDirtyTrue" class="container m-3">
+    <div v-loading="isLoading" @click="setIsDataDirtyTrue" class="container m-3">
         <el-image v-if="(post.image)" style="width: auto; height: 200px" :src=post.image fit="cover" />
         <label for="title" class="form-label"></label>
         <input type="text" v-model="post.title" class="form-control m-4" id="title" placeholder="請輸入標題"
@@ -20,7 +20,6 @@
 
 <script>
 import axios from '@/axios';
-import Swal from 'sweetalert2';
 import DOMPurify from 'isomorphic-dompurify';
 import { ElMessage } from "element-plus";
 import router from '@/router';
@@ -29,6 +28,7 @@ import router from '@/router';
 export default {
     data() {
         return {
+            isLoading: false,
             isDataDirty: false,
             post: {
                 'title': '',
@@ -53,24 +53,12 @@ export default {
             this.isDataDirty = true;
         },
         async save() {
+            this.isLoading = true;
             // DOMPurify防禦XSS
             this.post.title = DOMPurify.sanitize(this.post.title);
             this.post.content = DOMPurify.sanitize(this.post.content);
             this.post.image = DOMPurify.sanitize(this.post.image);
             // console.log(this.post)
-
-            Swal.fire({
-                title: "儲存中...",
-                html: "請稍後",
-                timerProgressBar: true,
-                timer:900,
-                allowOutsideClick: false,// 防止點擊背景關閉
-                allowEscapeKey: false,// 防止按 ESC 關閉
-                didOpen: () => {
-                    Swal.showLoading();
-                    const timer = Swal.getPopup().querySelector(".swal2-progress-bar");
-                },
-            })
             try {
                 const response = await axios.post('/post', this.post);
                 if (response.status === 201) {

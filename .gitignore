@@ -1,6 +1,7 @@
 #package
 /frontend/dist/*
 /backend/target/*
+/backend/src/main/resources/static/*
 
 # Logs
 logs

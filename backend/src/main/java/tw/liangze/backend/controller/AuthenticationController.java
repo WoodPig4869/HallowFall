@@ -46,9 +46,8 @@ public class AuthenticationController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
-        AuthenticationResponse response = authService.authenticate(request);
-
-        if (response == null) {
+            AuthenticationResponse response = authService.authenticate(request);
+            if (response == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("登入失敗"); // 登入失敗，返回 400 狀態碼和錯誤訊息
         }
         return ResponseEntity.ok(response); // 登入成功，返回 200 狀態碼

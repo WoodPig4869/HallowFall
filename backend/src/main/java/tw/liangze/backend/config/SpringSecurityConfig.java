@@ -40,7 +40,7 @@ public class SpringSecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**","/register/**","/user/check/**")
+                        req->req.requestMatchers("/login/**","/register/**","/user/check/**","/assets/**",  "/images/**","/", "/index.html")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET,"/post/**","user/**","/comment/**")
                                 .permitAll()

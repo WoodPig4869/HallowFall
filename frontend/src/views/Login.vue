@@ -23,6 +23,7 @@
 <script>
 import Swal from 'sweetalert2'
 import axios from '@/axios';
+import router from '@/router';
 
 export default {
   data() {
@@ -86,7 +87,7 @@ export default {
             allowEscapeKey: false
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.href = '/content';
+              router.push('/content');
             }
           });
         }
