@@ -22,6 +22,7 @@
 import axios from '@/axios';
 import Swal from 'sweetalert2';
 import DOMPurify from 'isomorphic-dompurify';
+import { ElMessage } from "element-plus";
 import router from '@/router';
 
 
@@ -52,7 +53,6 @@ export default {
             this.isDataDirty = true;
         },
         async save() {
-            console.log(this.post)
             // DOMPurify防禦XSS
             this.post.title = DOMPurify.sanitize(this.post.title);
             this.post.content = DOMPurify.sanitize(this.post.content);
@@ -63,40 +63,29 @@ export default {
                 title: "儲存中...",
                 html: "請稍後",
                 timerProgressBar: true,
-                timer: 2000,
+                timer:900,
                 allowOutsideClick: false,// 防止點擊背景關閉
                 allowEscapeKey: false,// 防止按 ESC 關閉
                 didOpen: () => {
                     Swal.showLoading();
                     const timer = Swal.getPopup().querySelector(".swal2-progress-bar");
                 },
-            }).then((result) => {
-                /* Read more about handling dismissals below */
-                if (result.dismiss === Swal.DismissReason.timer) {
-                    console.log("I was closed by the timer");
-                }
-            });
+            })
             try {
                 const response = await axios.post('/post', this.post);
                 if (response.status === 201) {
-                    Swal.fire({
-                        title: "儲存成功！",
-                        icon: "success",
-                        confirmButtonText: "確認",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                    });
-                    // 跳轉到posts頁面
-                    router.push({ path: '/posts' });
+                    console.log(response.status);
+                    console.log(response.status);
+                    console.log(response.status);
+                    // 設定資料已儲存
+                    this.isDataDirty = false;
+                    // 顯示成功提示
+                    ElMessage.success("發文成功");
+                    // 導向到 /posts
+                    router.push('/posts');
                 }
             } catch (error) {
-                await new Promise((resolve) => setTimeout(resolve, 850));
-                Swal.fire({
-                    title: "錯誤",
-                    text: "伺服器無回應，請聯繫管理員",
-                    icon: "error",
-                    confirmButtonText: "確認",
-                });
+                console.error('Error posting:', error);
             }
         },
         handleFileChange1(file) {

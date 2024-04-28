@@ -62,7 +62,7 @@ public class PostController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable int id) {
         if (postService.delete(id)) {
-            return ResponseEntity.status(HttpStatus.OK).body("文章刪除成功");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("文章刪除成功");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("文章刪除失敗");
         }

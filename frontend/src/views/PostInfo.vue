@@ -56,7 +56,7 @@
             <div class="container mt-2">
                 <div v-for="comment in comments" :key="comment.commentId">
                     <CommentCard :comment="comment" />
-                    
+
                 </div>
             </div>
 
@@ -174,10 +174,17 @@ export default {
                 confirmButtonText: '確定',
                 showCancelButton: true,
                 cancelButtonText: "取消"
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`/post/${this.postId}`)
-                    router.push({ path: '/posts' })
+                    await axios.delete(`/post/${this.postId}`)
+                        .then(response => {
+                            if (response.status === 204) {
+                                router.push({ path: '/posts' });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error deleting post:', error);
+                        });
                 };
             })
         },

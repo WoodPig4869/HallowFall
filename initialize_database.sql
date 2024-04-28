@@ -4,14 +4,14 @@ CREATE DATABASE HallowDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE HallowDB;
 
 -- 後端登入身份初始化
--- CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
--- GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
+CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
+GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
 
 -- 創建使用者資料表
 CREATE TABLE IF NOT EXISTS user (
     user_id INT AUTO_INCREMENT PRIMARY KEY, -- 使用者 ID (Primary Key)
     phone VARCHAR(100) UNIQUE, -- 電話(手機號碼)
-    email VARCHAR(100) UNIQUE NOT NULL, -- 電子郵件
+    email VARCHAR(100) UNIQUE NOT NULL , -- 電子郵件
     password VARCHAR(255) NOT NULL,-- 密碼
     role VARCHAR(20) DEFAULT 'USER',-- 使用者權限
     deleted BOOLEAN DEFAULT FALSE, -- 刪除標記
@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS user (
     registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --建立時間
     avatar MEDIUMTEXT DEFAULT NULL, -- 頭像(Image)
     cover_image MEDIUMTEXT DEFAULT NULL, -- 封面照片
-    signature VARCHAR(3000) DEFAULT '<p></p>' -- 使用者的自我介紹(Biography)
+    signature VARCHAR(3000) DEFAULT '<p></p>', -- 使用者的自我介紹(Biography)
+    CONSTRAINT email_readonly CHECK (email = email) -- 設定 email 為不可更改
 );
 
 -- 加入聯合索引(考慮到未來可能常用phone或email查找)
@@ -45,7 +46,7 @@ CREATE TABLE IF NOT EXISTS post(
   content MEDIUMTEXT, -- 文章內容
   image MEDIUMTEXT DEFAULT NULL, -- 文章封面圖片
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 發文時間
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 最後編輯時間
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 最後編輯時間
   deleted BOOLEAN DEFAULT FALSE, -- 刪除標記 
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
