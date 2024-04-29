@@ -32,12 +32,12 @@
           </div>
           <div class="me-5" v-if="isLoggedIn">
             <router-link to="/content">
-              <img :src="avatar" class="rounded-circle border " style="width: 80px;" />
+              <el-image :src="avatar" class="rounded-circle border " style="width: 50px; height: 50px;" fit="cover" />
             </router-link>
           </div>
-          <a v-if="!isLoggedIn" class="btn btn-outline-success btn-lg" href="/register">註冊</a>
-          <a v-if="!isLoggedIn" class=" btn btn-primary btn-lg" href="/login">登入</a>
-          <a v-if="isLoggedIn" class="btn btn-secondary btn-lg" @click="logout()">登出</a>
+          <router-link to="/register" v-if="!isLoggedIn" class="btn btn-outline-success btn-lg">註冊</router-link>
+          <router-link to="/login" v-if="!isLoggedIn" class=" btn btn-primary btn-lg">登入</router-link>
+          <button v-if="isLoggedIn" class="btn btn-secondary btn-lg" @click="logout()">登出</button>
         </div>
       </div>
     </div>
@@ -88,7 +88,9 @@ const logout = async ()=>{
     if (result.isConfirmed) {
       localStorage.removeItem('Authorization');
       ElMessage.info("已登出");
-      router.push({ path: '/' });
+      router.push({ path: '/' }).then(() => {
+        location.reload();
+      });
     }
   });
 

@@ -8,7 +8,7 @@
                     <div class="d-flex align-items-center justify-content-center mb-3 mt-4">
                         <div class="avatar-container">
                             <el-avatar id="avatarImg" :src="userInfo.avatar"
-                                class="rounded-circle border border-dark me-2" style="width: auto; height: 160px;"
+                                class="rounded-circle border border-dark me-2" style="width: 160px; height: 160px;"
                                 fit="cover" />
                         </div>
                         <div class="d-flex flex-column" style="max-width: 75%;">
@@ -108,8 +108,8 @@ export default defineComponent({
             userInfo
         }
     },
-    created() {
-        axios.get('/user/self').then(response => {
+    async created() {
+       await axios.get('/user/self').then(response => {
             this.userInfo.phone = response.data.phone
             this.userInfo.signature = response.data.signature
             this.userInfo.nickname = response.data.nickname

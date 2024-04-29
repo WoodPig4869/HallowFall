@@ -1,7 +1,7 @@
 <template>
     <div v-if="logged" class="container mb-3">
-        <el-button type="primary" round plain @click="goToNewPost">新貼文</el-button>
-        <el-button type="info" round plain @click="goToMyPosts">我的貼文</el-button>
+        <el-button type="primary" round plain @click="$router.push('/newpost')">新貼文</el-button>
+        <el-button type="info" round plain @click="goToMyPost()">我的貼文</el-button>
     </div>
     <div v-if="!this.userId == 0" class="container mb-3">
         <div class="row">
@@ -117,16 +117,13 @@ export default {
             }
             return;
         },
-        goToMyPosts() {
-            window.location.href = '/posts/' + this.loggedUser.userId;
-        },
-        goToNewPost() {
-            window.location.href = '/newpost';
+        goToMyPost() {
+            this.$router.push({ path: `/posts/${this.loggedUser.userId}` });
         }
     },
     watch: {
         '$route.params.userId': function () {
-            window.location.reload();
+            location.reload();
         }
     }
 };

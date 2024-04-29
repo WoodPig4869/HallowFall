@@ -72,7 +72,7 @@ public class UserController {
     public ResponseEntity<User> getSelfUser() {
         User user = userService.getSelf();
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(401).build();
         }
         return ResponseEntity.ok(user);
     }

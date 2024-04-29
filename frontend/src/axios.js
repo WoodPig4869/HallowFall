@@ -45,6 +45,8 @@ instance.interceptors.response.use(
     // statusCode: 400-599
     if (error.response.status === 401) {
       // 401 代表尚未登入，或登入憑證過期
+      // 顯示提示，並刪除登入憑證
+      localStorage.removeItem("Authorization");
       ElMessage.warning("請登入");
       // 重新導向到登入頁
       router.push("/login");

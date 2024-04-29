@@ -70,7 +70,9 @@ export default {
                     // 顯示成功提示
                     ElMessage.success("發文成功");
                     // 導向到 /posts
-                    router.push('/posts');
+                    router.push({ path: '/posts' }).then(() => {
+                        location.reload();
+                    });
                 }
             } catch (error) {
                 console.error('Error posting:', error);

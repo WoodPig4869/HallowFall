@@ -10,7 +10,7 @@
     </parent>
     <groupId>tw.liangze</groupId>
     <artifactId>backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.8</version>
     <packaging>jar</packaging>
     <name>backend</name>
     <description>backend</description>

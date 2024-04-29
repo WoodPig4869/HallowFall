@@ -3,12 +3,12 @@
     <h2 class="text-center mb-3">會員註冊</h2>
     <div class="container mt-2 d-flex justify-content-center">
       <div class="container" style="max-width: 420px;">
-        <el-form ref="ruleFormRef" style="max-width: 800px" :model="ruleForm" status-icon :rules="rules"
-          label-width="auto" size="large" labelPosition="top">
+        <el-form ref="ruleFormRef" @keydown.enter.prevent="submitForm(ruleFormRef)" style="max-width: 800px"
+          :model="ruleForm" status-icon :rules="rules" label-width="auto" size="large" labelPosition="top">
           <el-form-item label="電子信箱" prop="email">
             <el-input v-model="ruleForm.email" maxlength="30" />
           </el-form-item>
-          <el-form-item label="密碼" prop="pass">
+          <el-form-item label="密碼" prop="password">
             <el-input v-model="ruleForm.password" type="password" autocomplete="off" maxlength="30" />
           </el-form-item>
           <el-form-item label="確認密碼" prop="checkPass">
@@ -108,11 +108,11 @@ const rules = reactive<FormRules<typeof ruleForm>>({
   nickname: [{ validator:checkNickname, trigger: 'blur' }],
 })
 
-const submitForm = async (formEl: FormInstance | undefined) => {
+const submitForm = async(formEl: FormInstance | undefined) => {
   // 在發送請求前顯示 loading 狀態
   loading.value = true;
   if (!formEl) return
-  const valid = await new Promise<boolean>((resolve) => {
+  const valid = new Promise<boolean>((resolve) => {
     formEl.validate((valid) => {
       resolve(valid);
     });

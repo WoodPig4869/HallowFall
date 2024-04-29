@@ -87,7 +87,9 @@ export default {
             allowEscapeKey: false
           }).then((result) => {
             if (result.isConfirmed) {
-              router.push('/content');
+              router.push({ path: '/content' }).then(() => {
+                location.reload();
+              });
             }
           });
         }
