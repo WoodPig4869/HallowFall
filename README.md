@@ -5,8 +5,8 @@
 HallowFall-backend 為個人練習專案，自主進行全端網頁開發練習，實踐前後端分離架構、Docker 容器化管理及 Nginx 反向代理，精進 Vue.js、Git、JWT、MySQL 等技術及工具。
 
 # 展示頁面
-[DEMO](http://allenzone.ddns.net/)
-託管域名：allenzone.ddns.net
+## [請點我進入展示頁面](http://allenzone.ddns.net/)
+## DNS 託管域名：allenzone.ddns.net
 
 ## 環境設定
 
