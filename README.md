@@ -2,7 +2,11 @@
 
 ## 專案概述
 
-HallowFall-backend是一個包含會員功能和社群媒體（發文和留言）功能的網站後端專案。旨在提供一個安全、可擴展和可維護的平台，讓用戶可以進行註冊、登錄、發文和留言等操作。
+HallowFall-backend 為個人練習專案，自主進行全端網頁開發練習，實踐前後端分離架構、Docker 容器化管理及 Nginx 反向代理，精進 Vue.js、Git、JWT、MySQL 等技術及工具。
+
+# 展示頁面
+[DEMO](http://allenzone.ddns.net/)
+託管域名：allenzone.ddns.net
 
 ## 環境設定
 

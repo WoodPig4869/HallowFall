@@ -4,8 +4,8 @@ CREATE DATABASE HallowDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE HallowDB;
 
 -- 後端登入身份初始化
--- CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
--- GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
+CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
+GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
 
 -- 創建使用者資料表
 CREATE TABLE IF NOT EXISTS user (
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS post(
   image MEDIUMTEXT DEFAULT NULL, -- 文章封面圖片
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 發文時間
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 最後編輯時間
-  deleted BOOLEAN DEFAULT FALSE, -- 刪除標記 
+  deleted BOOLEAN DEFAULT FALSE, -- 刪除標記
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 -- 加入user_id索引
@@ -223,5 +223,3 @@ CREATE PROCEDURE InsertComment (
 BEGIN
   INSERT INTO comment(post_id,user_id,content) VALUES (inputPostId,inputUserId,NewContent);
 END;
-
-
