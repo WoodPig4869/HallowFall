@@ -2,16 +2,11 @@ package tw.liangze.backend.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tw.liangze.backend.model.User;
 import tw.liangze.backend.repository.UserRepository;
 import tw.liangze.backend.service.UserService;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -19,11 +14,6 @@ import java.util.Optional;
 public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
-
-    public UserController(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-    }
 
     /**
      * 查詢 Email 是否存在
@@ -38,6 +28,11 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    public UserController(UserRepository userRepository, UserService userService) {
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     /**
@@ -61,25 +56,19 @@ public class UserController {
 //        return userRepository.findAllByDeletedFalse();
 //    }
 
-    //    根據id查詢會員
+    //    根據 userId查詢會員，id為0表示當前用戶
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") int userId) {
-        return userRepository.findByUserIdAndDeletedFalse(userId).orElseThrow();
-    }
-
-    //    查詢自己
-    @GetMapping("/self")
-    public ResponseEntity<User> getSelfUser() {
-        User user = userService.getSelf();
-        if (user == null) {
-            return ResponseEntity.status(401).build();
+    public ResponseEntity<User> getUserById(@PathVariable("id") int userId) {
+        try{
+            return ResponseEntity.ok(userService.findById(userId));
+        }catch (Exception e){
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(user);
     }
 
 
     //    修改自己
-    @PutMapping("/self")
+    @PutMapping("/")
     public ResponseEntity<?> updateUser(@RequestBody User user) {
         return userService.updateUser(user)
                 ? ResponseEntity.ok().build()

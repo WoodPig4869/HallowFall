@@ -47,9 +47,9 @@ instance.interceptors.response.use(
       // 401 代表尚未登入，或登入憑證過期
       // 顯示提示，並刪除登入憑證
       localStorage.removeItem("Authorization");
-      ElMessage.warning("請登入");
+      ElMessage.warning("請先登入");
       // 重新導向到登入頁
-      router.push("/login");
+      router.push({ path: "/posts" })
     } else if (error.response.status === 403) {
       ElMessage.warning("權限不足，請聯繫管理員");
     }

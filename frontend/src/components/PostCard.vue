@@ -10,8 +10,8 @@
                 <div class="d-flex flex-column flex-md-row justify-content-between">
                     <div class="mb-2 mb-md-0">
                         <p class="fw-bold mb-1">作者：</p>
-                        <router-link :to="`/posts/${post.userId}`" class="text-decoration-none">{{ post.nickname
-                            }}</router-link>
+                        <router-link :to="'/userPosts/' + post.userId" style="font-size: 23px;"
+                            class="text-decoration-none">{{ post.nickname }}</router-link>
 
                     </div>
                     <div class="mb-2 mb-md-0">
@@ -29,6 +29,8 @@
 
 </template>
 <script>
+
+
 export default {
     props: {
         post: {
@@ -36,6 +38,14 @@ export default {
             required: true,
         },
     },
+
+    methods: {
+        goToUserPost() {
+            this.$router.push('/posts/' + this.post.userId).then(() => {
+                location.reload();
+            });    
+        },
+    }
 };
 </script>
 

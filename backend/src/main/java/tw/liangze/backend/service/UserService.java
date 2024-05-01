@@ -25,13 +25,26 @@ public class UserService {
         this.userLogRepository = userLogRepository;
     }
 
+    //    根據 userId查找用戶，id為0代表找到當前用戶
+    public User findById(int userId) {
+        try {
+            if (userId==0) {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                return userRepository.findByEmail(authentication.getName()).orElseThrow();
+            } else {
+                return userRepository.findByUserIdAndDeletedFalse(userId).orElseThrow();
+            }
+        }catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * 根據 userId 找用戶(包含已刪除用戶)
      * @param userId
      * @return User
      */
-    public User findById(Integer userId) {
+    public User findByIdExist(Integer userId) {
         return userRepository.findById(userId).orElseThrow();
     }
 
@@ -44,7 +57,7 @@ public class UserService {
     public boolean updateUser(User user) {
         try {
             //        找到當前用戶
-            User targetUser = getSelf();
+            User targetUser = findById(0);
             //        更新用戶資料
             if (user.getPassword() != null) {
                 String ip = servletRequest.getHeader("X-Forwarded-For");
@@ -72,20 +85,19 @@ public class UserService {
             userRepository.save(targetUser);
             return true;
         }catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
 
     // 找到當前用戶id
     public Integer getSelfId() {
-        User user = getSelf();
+        User user = findById(0);
         return user.getUserId();
     }
 
     // 找到當前用戶 Role
     public String getSelfRole() {
-        User user = getSelf();
+        User user = findById(0);
         Role role = user.getRole();
         return role.name();
     }
@@ -96,14 +108,5 @@ public class UserService {
         return user.getNickname();
     }
 
-//    找到當前用戶
-    public User getSelf() {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            return userRepository.findByEmail(authentication.getName()).orElseThrow();
-        }catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 }

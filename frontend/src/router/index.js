@@ -6,6 +6,7 @@ import LoginPage from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Content from "@/views/Content.vue";
 import Posts from "@/views/Posts.vue";
+import UserPosts from "@/views/UserPosts.vue";
 import PostInfo from "@/views/PostInfo.vue";
 import NewPost from "@/views/NewPost.vue";
 import Header from "@/components/Header.vue";
@@ -36,9 +37,14 @@ const routes = [
         name: "Register",
       },
       {
-        path: "posts/:userId?",
+        path: "posts",
         component: Posts,
         name: "Posts",
+      },
+      {
+        path: "userPosts/:userId",
+        component: UserPosts,
+        name: "UserPosts",
       },
       {
         path: "postInfo/:postId",

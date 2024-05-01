@@ -17,16 +17,30 @@
           <li class="list-group-item">
             <strong>前後端分離：</strong>使用前後端分離的架構，提高了應用程序的可擴展性和可維護性。前端利用Vue.js框架創建動態且交互式的用戶界面，後端使用Java和Spring框架進行開發。
           </li>
-          <li class="list-group-item"><strong>JWT 身份驗證：</strong>實現了JWT（JSON Web
-            Tokens）作為核心身份驗證機制，提升安全性並無縫體驗。JWT具有保留參數的功能，進一步降低請求次數，提升用戶體驗。</li>
-          <li class="list-group-item"><strong>MySQL
-              數據集成：</strong>實現了數據的存儲和檢索，用戶可以在動態且交互式的用戶界面中進行發文和留言等操作，同時保證了數據的完整性和安全性。</li>
-          <li class="list-group-item"><strong>Spring Security：</strong>後端使用了Spring
-            Security框架實現了後端身份驗證，防禦XSS等惡意攻擊，確保了伺服器的安全。同時可針對用戶進行權限管理，限制訪問請求。</li>
-          <li class="list-group-item"><strong>Vue Router 實現頁面導航：</strong>利用Vue
-            Router，實現了靈活和高效的頁面導航。用戶可以輕鬆地在不同視圖之間進行平滑過渡，增強了用戶的體驗感。</li>
-          <li class="list-group-item"><strong>使用存儲過程提升安全性：</strong>在MySQL中實現了Stored
-            Procedure，用於帳號創建和日誌記錄等功能。提升了應用程序的安全性，確保了數據的完整性和可靠性，同時抵禦SQL Injection。</li>
+          <li class="list-group-item">
+            <strong>JWT 身份驗證：</strong>
+            實現了JWT（JSON Web Tokens）作為核心身份驗證機制，提升安全性並無縫體驗。JWT具有保留參數的功能，進一步降低請求次數，提升用戶體驗。
+          </li>
+          <li class="list-group-item">
+            <strong>MySQL 數據集成：</strong>
+            實現了數據的存儲和檢索，用戶可以在動態且交互式的用戶界面中進行發文和留言等操作，同時保證了數據的完整性和安全性。
+          </li>
+          <li class="list-group-item">
+            <strong> Spring Security：</strong>
+            後端使用了 Spring Security框架實現了後端身份驗證，防禦XSS等惡意攻擊可能對後端的影響，確保了伺服器的安全。同時可針對用戶進行權限管理，限制訪問請求。
+          </li>
+          <li class="list-group-item">
+            <strong>Vue Router 實現頁面導航：</strong>
+            使用Vue Router，實現了靈活和高效的頁面導航。用戶可以輕鬆地在不同視圖之間進行平滑過渡，增強了用戶的體驗感。
+          </li>
+          <li class="list-group-item">
+            <strong>使用存儲過程：</strong>
+            在MySQL中建構 Stored Procedure 預存儲程序，用於帳號創建和日誌記錄等功能。提升了應用程序的安全性，確保了數據的完整性和可靠性，同時抵禦SQL Injection。
+          </li>
+          <li class="list-group-item">
+            <strong>XSS 防禦：</strong>
+            所有供用戶自由輸入的數據均經過語法檢查和防禦程序的處理，以確保應用程序不受到不良用戶行為的影響，維護系統的穩定性和安全性。
+          </li>
         </ul>
       </div>
     </div>
@@ -37,10 +51,8 @@
   <br />
   <button v-show=false @click="test" class="btn btn-primary">Click Me</button>
   <br />
-  <textarea v-model="this.editorData" />
-  <v-md-editor v-model="this.editorData" mode="edit" placeholder="請輸入內容..." @save="save"></v-md-editor>
   <v-md-editor v-model="this.editorData" mode="preview"></v-md-editor>
-  
+
 </template>
 
 <script>
@@ -53,7 +65,6 @@ export default {
     return {
       editorData: '',
       markdownContent: '',
-
     }
   },
   methods: {

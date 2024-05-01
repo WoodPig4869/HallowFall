@@ -85,6 +85,8 @@ import { defineComponent, reactive } from 'vue'
 
 import axios from '@/axios';
 import Swal from 'sweetalert2';
+import { ElMessage } from "element-plus";
+import router from "@/router";
 
 // DOMPurify
 import DOMPurify from 'isomorphic-dompurify';
@@ -109,7 +111,8 @@ export default defineComponent({
         }
     },
     async created() {
-       await axios.get('/user/self').then(response => {
+        try{
+       await axios.get('/user/0').then(response => {
             this.userInfo.phone = response.data.phone
             this.userInfo.signature = response.data.signature
             this.userInfo.nickname = response.data.nickname
@@ -126,12 +129,27 @@ export default defineComponent({
 
             this.initEditor()
         });
-        axios.get('/userlog').then(response => {
-            this.tableData = response.data
-        })
+        } catch (error) {
+            console.log(error, 'error')
+        }
     },
-    mounted() {
+    async mounted() {
         this.isDataDirty = false
+            await axios.get('/userlog').then(response => {
+                this.tableData = response.data
+            })
+        .catch (error => {
+            if (error.response.status === 404) {
+                // 這裡 404 代表未找到已登入用戶，或登入憑證過期
+                // 顯示提示，並刪除登入憑證
+                localStorage.removeItem("Authorization");
+                ElMessage.warning("請登入");
+                // 導向登入頁
+                
+                router.push({ path: '/login' })
+            }
+            console.log(error, 'error')
+        });
     },
     data() {
         return {
@@ -215,7 +233,7 @@ export default defineComponent({
                 }
             });
             try {
-                const response = await axios.put('/user/self', {
+                const response = await axios.put('/user/0', {
                     signature: this.editorData,
                     nickname: this.userInfo.nickname,
                     avatar: this.userInfo.avatar,
@@ -300,7 +318,7 @@ export default defineComponent({
                             }
                         });
                         try {
-                            const response = await axios.put('/user/self', {
+                            const response = await axios.put('/user', {
                                 password: `${password}`
 
                             })

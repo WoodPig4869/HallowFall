@@ -62,6 +62,7 @@
 
         </div>
     </div>
+    <el-backtop :right="60" :bottom="60" />
 </template>
 
 <script>

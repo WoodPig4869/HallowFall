@@ -26,7 +26,12 @@ public class UserLogController {
     public ResponseEntity<List<UserLog>> getUserLogs(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "10") int size){
         Pageable pageable = PageRequest.of(page, size);
-        List<UserLog> userLogs = userLogService.findTop50();
-        return ResponseEntity.ok(userLogs);
+        try {
+            List<UserLog> userLogs = userLogService.findTop50();
+            return ResponseEntity.ok(userLogs);
+        }catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+
     }
 }

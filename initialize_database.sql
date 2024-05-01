@@ -4,8 +4,8 @@ CREATE DATABASE HallowDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE HallowDB;
 
 -- 後端登入身份初始化
-CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
-GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
+-- CREATE USER 'watcher'@'%' IDENTIFIED BY 'P@ssw0rd';
+-- GRANT ALL PRIVILEGES ON *.* TO 'watcher'@'%';
 
 -- 創建使用者資料表
 CREATE TABLE IF NOT EXISTS user (
@@ -73,16 +73,16 @@ INSERT INTO user (phone,email,password,role,nickname,signature,avatar) VALUES
 ('0912345678','user@user.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','ADMIN','趙六','<h3>我不是李四。</h3>','https://cdn.pixabay.com/photo/2022/07/24/23/46/artificial-intelligence-7342613_1280.jpg'),
 ('0911111111','1111@1111.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','假面打火機','<h2>賴打</h2>','https://images.pexels.com/photos/582635/pexels-photo-582635.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'),
 ('0922222222','2222@2222.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','曉鐘','### 孔丘曾經告訴世人，君子喻於義，小人喻於利。','https://images.pexels.com/photos/21336648/pexels-photo-21336648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
-('0933333333','3333@3333.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','伊凡','### 所謂伊凡，關鍵是伊凡需要如何寫。','https://images.pexels.com/photos/1270184/pexels-photo-1270184.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
+('0933333333','3333@3333.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','伊凡','### 上帝會擲骰子嗎？','https://images.pexels.com/photos/1270184/pexels-photo-1270184.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
 ('0944444444','4444@4444.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','秋雲雲','### 其實是有更深層的原因，帶著這些問題，我們來審視一下秋雲雲。','https://images.pexels.com/photos/18714898/pexels-photo-18714898.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
 ('0955555555','5555@5555.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','Frisk','### You''re not actually Frisk, are you? Frisk''s been gone for a long time.','https://pm1.narvii.com/6224/cea53fc4cb2a2fbed21f62c31eecf31a3adeafec_hq.jpg'),
 ('0966666666','6666@6666.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','白櫻憐','### 我們不得不面對一個非常尷尬的事實，那就是，每個人都不得不面對這些問題。','https://images.pexels.com/photos/4563760/pexels-photo-4563760.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
-('0977777777','7777@7777.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','朝霞橋','### 米歇潘曾經說過，生命是一條艱險的峽谷，只有勇敢的人才能通過。這似乎非常的有道理，對吧？','https://images.pexels.com/photos/22719217/pexels-photo-22719217.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
-('0988888888','8888@8888.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','Killer Queen','###  Stand of Yoshikage Kira, featured in the fourth part of the JoJo''s Bizarre Adventure series, Diamond is Unbreakable.','https://wallpapercave.com/wp/wp7434294.jpg');
+('0977777777','7777@7777.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','朝霞橋','### 米歇潘曾經說過，生命是一條艱險的峽谷，只有勇敢的人才能通過。<br />這似乎非常的有道理，對吧？','https://images.pexels.com/photos/60619/boot-leather-shoe-old-60619.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
+('0988888888','8888@8888.com','$2a$10$.UAoeaAVeH8vhPsxHaw1I.teyo3iBunZllqraM1EmHQJwk1CkwD8u','USER','Killer Queen','###  Stand of Yoshikage Kira, featured in the fourth part of the JoJo''s Bizarre Adventure series, Diamond is Unbreakable.','https://w0.peakpx.com/wallpaper/150/213/HD-wallpaper-killer-queen-jjba-killer-queen-jjbap4.jpg');
 
 
 INSERT INTO post(user_id,title,content,image) VALUES
-(11,'前後端分離：提高Web應用效能和開發效率的關鍵','在現代Web開發中，前後端分離已成為重要的開發模式，提高了開發效率和應用效能。通過RESTful API和後端API服務，前後端可以獨立開發並進行協作。跨域和安全性問題可通過配置CORS和Spring Security來解決。<br /><br />
+(2,'前後端分離：提高Web應用效能和開發效率的關鍵','在現代Web開發中，前後端分離已成為重要的開發模式，提高了開發效率和應用效能。通過RESTful API和後端API服務，前後端可以獨立開發並進行協作。跨域和安全性問題可通過配置CORS和Spring Security來解決。<br /><br />
 ## 優勢
 - 提高開發效率
 - 提高應用效能
@@ -107,7 +107,7 @@ INSERT INTO post(user_id,title,content,image) VALUES
 3. **技術選擇多樣性**：可以根據具體需求和團隊技術水平，靈活選擇合適的技術和框架。
 4. **團隊協作提升**：良好的團隊合作機制可以提升開發效率和代碼質量，減少後續維護成本。<br /><br />
 總的來說，前後端分離是現代Web開發的重要模式之一，通過合理的實踐和管理，可以為Web應用帶來顯著的效率和效能提升。','https://images.pexels.com/photos/268782/pexels-photo-268782.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
-(1,'何謂 Nginx 反向代理','# Nginx反向代理在前後端分離項目中的優點<br /><br />
+(3,'何謂 Nginx 反向代理','# Nginx反向代理在前後端分離項目中的優點<br /><br />
 Nginx 反向代理是一種在網絡架構中使用的技術，它通過將客戶端的請求轉發給後端服務器，然後將後端服務器的響應返回給客戶端，來實現對後端服務器的代理。相比於正向代理，反向代理是指用於伺服器端的代理。<br /><br />
 以下是Nginx反向代理在前後端分離項目中的一些優點：<br /><br />
 - **負載均衡**：Nginx可以作為反向代理在多個後端服務器間分發請求，從而實現負載均衡。這有助於提高系統的性能和可擴展性，因為多個服務器可以共同處理請求，減輕單個服務器的壓力。<br /><br />
@@ -135,7 +135,7 @@ Spring Security可以與JWT集成，實現基於token的身份驗證和授權機
 Spring Security與JWT的集成提供了一個安全、無狀態的身份驗證機制，適用於各種現代Web應用開發場景。通過結合Spring Security的強大功能和JWT的輕量、安全特性，我們可以實現更安全、更可靠的身份驗證和授權機制，保護應用程序免受各種攻擊。<br /><br />
 這段文章簡要介紹了Spring Security與JWT認證的相關內容，希望對你有所幫助！
 ','https://hashnode.com/utility/r?url=https:%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Fupload%2Fv1633101239445%2F1LPg4fxdV.png%3Fw%3D1200%26h%3D630%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp%26fm%3Dpng'),
-(2,'Docker 心法分享','## Docker 容器管理的優點<br /><br />
+(5,'Docker 心法分享','## Docker 容器管理的優點<br /><br />
 - **跨平台性**：Docker 可以在不同的操作系統上運行，包括 Linux、Windows 和 macOS，這意味著開發人員可以在不同的環境中輕鬆部署和運行相同的應用程式，從而提高了跨平台的可移植性和一致性。<br /><br />
 - **快速部署和啟動**：通過 Docker 容器，開發人員可以快速部署應用程式並啟動容器，無需進行繁瑣的設置和配置。這節省了大量的時間和精力，特別是在開發和測試階段。<br /><br />
 - **資源隔離**：Docker 容器提供了良好的資源隔離，每個容器都擁有自己的運行環境和資源，互不干擾。這使得多個應用程式可以在同一台主機上運行，而不用擔心資源衝突和性能問題。<br /><br />

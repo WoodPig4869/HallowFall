@@ -15,6 +15,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // 允許的請求方法
                 .allowedHeaders("*"); // 允許的請求頭部
     }
-
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("forward:/index.html");
+    }
 
 }

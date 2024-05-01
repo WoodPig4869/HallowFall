@@ -1,13 +1,35 @@
 <template>
-    <div class="container">
+    <div class="container mb-3">
         <div class="row">
-            <div class="col">
-                <h2 class="text-center">文章列表</h2>
+            <div class="col-12 col-md-8">
+                <p class="fw-bold">會員資訊</p>
+                <h2 class="mb-3 text-center" style="font-weight: bold">{{ targetUser.nickname }}</h2>
+                <el-image :src="targetUser.avatar" class="rounded-circle border" style="width: 150px; height: 150px;"
+                    fit="cover" />
+                <div class="mt-3">
+                    <p class="fw-bold mb-1">個人簽名</p>
+                    <v-md-editor v-model="this.targetUser.signature" mode="preview"></v-md-editor>
+                </div>
             </div>
-            <div class="col text-end">
-                <button v-if="logged" @click="goMyPosts()" type="button" class="btn btn-outline-success">我的文章</button>
-                <button @click="goNewPost()" type="button" class="btn btn-primary">發新文章</button>
+            <div class="col-12 col-md-4">
+                <div class="mb-3">
+                    <p class="fw-bold mb-1">行動電話:</p>
+                    <p>{{ targetUser.phone }}</p>
+                </div>
+                <div class="mb-3">
+                    <p class="fw-bold mb-1">註冊日期:</p>
+                    <p>{{ targetUser.registrationDate }}</p>
+                </div>
+                <div class="mb-3">
+                    <p class="fw-bold mb-1">身份類別:</p>
+                    <p>{{ targetUser.role }}</p>
+                </div>
             </div>
+        </div>
+        <h3>已發布文章</h3>
+        <div v-if="posts.length == 0">
+            <br/>
+            <h4>暫無文章</h4>
         </div>
     </div>
 
@@ -27,7 +49,6 @@
 import axios from '@/axios';
 import PostCard from '@/components/PostCard.vue';
 import { jwtDecode } from "jwt-decode";
-import { ElMessage } from 'element-plus';
 
 export default {
     components: {
@@ -59,17 +80,13 @@ export default {
                 .then(response => {
                     this.posts = response.data;
                     this.loading = false;
+                    // console.log(this.posts.length);
                 })
                 .catch(error => {
                     console.error('Error fetching posts:', error);
-                    this.loading = false;
                 });
         },
         fetchTargetUser() {
-            // 先檢查是否為訪問所有文章
-            if (this.userId === 0) {
-                return;
-            }
             axios
                 .get(`/user/${this.userId}`)
                 .then(response => {
@@ -99,28 +116,7 @@ export default {
             }
             return;
         },
-        goNewPost() {
-            if (this.logged) {
-                this.$router.push({ path: `/newpost` })
-            } else {
-                ElMessage.warning("請先登入")
-                this.$router.push({ path: `/login` })
-            }
-        },
-        goMyPosts(){
-            if (this.logged) {
-                this.$router.push({ path: `/userPosts/${this.loggedUser.userId}` })
-            } else {
-                ElMessage.warning("請先登入")
-                this.$router.push({ path: `/login` })
-            }
-        }
     },
-    watch: {
-        '$route.params.userId': function () {
-            location.reload();
-        }
-    }
 };
 </script>
 

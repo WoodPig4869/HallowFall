@@ -25,7 +25,6 @@ public class UserLogService {
     public List<UserLog> findTop50() {
         //        找到當前用戶userId
         Integer targetUserId = userService.getSelfId();
-
         return userLogRepository.findTop50ByUserIdOrderByTimeDesc(targetUserId);
     }
 }
