@@ -42,7 +42,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(
                         req->req.requestMatchers("/login/**","/register/**","/user/check/**","/assets/**",  "/*", "/index.html")
                                 .permitAll()
-                                .requestMatchers(HttpMethod.GET,"/post/**","user/**","/comment/**")
+                                .requestMatchers(HttpMethod.GET,"api-docs/**","/post/**","user/**","/comment/**")
                                 .permitAll()
                                 .requestMatchers("/api/**").hasAnyAuthority("ADMIN","ROOT")
                                 .anyRequest()
