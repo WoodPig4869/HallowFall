@@ -77,7 +77,7 @@
             <el-table-column prop="ipAddress" label="IP位置" />
         </el-table>
     </div>
-
+    <el-backtop :right="60" :bottom="60" />
 </template>
 
 <script>

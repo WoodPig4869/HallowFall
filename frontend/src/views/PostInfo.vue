@@ -23,6 +23,9 @@
                 <button class="btn btn-primary" @click="editorModeToggle()">編輯模式</button>
                 <button class="btn btn-danger" @click="deletePost()">刪除文章</button>
             </div>
+            <div v-else class="container d-flex justify-content-end align-items-center">
+                <router-link class="btn btn-primary" :to="'/userPosts/' + post.userId">查看作者</router-link>
+            </div>
             <br />
 
             <div class="w-100 text-center">

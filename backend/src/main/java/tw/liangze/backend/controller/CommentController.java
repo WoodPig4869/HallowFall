@@ -1,5 +1,9 @@
 package tw.liangze.backend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +14,7 @@ import tw.liangze.backend.service.CommentService;
 
 import java.util.List;
 
+@Tag(name = "留言控制", description = "管理Comment物件")
 @RestController
 @RequestMapping("/comment")
 public class CommentController {
@@ -20,21 +25,26 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    /**
-     * 根據 postId 取得該文章的所有留言
-     * @param postId
-     * @return List<CommentDTO> 包含 留言者id,留言者名稱,留言內容,留言時間 的 List
-     */
+    @Operation(summary = "查詢留言", description = "根據postId查詢留言")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "回傳留言列表"),
+            @ApiResponse(responseCode = "404", description = "查無資料")
+    })
     @GetMapping("/{postId}")
-    public List<CommentDTO> getCommentsByPostId(@PathVariable("postId") int postId) {
-        return commentService.getByPostId(postId);
+    public ResponseEntity<?> getCommentsByPostId(@PathVariable("postId") int postId) {
+        List<CommentDTO> result = commentService.getByPostId(postId);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
     }
 
-    /**
-     * 新增留言
-     * @param comment 物件，內容包含 postId, content
-     * @return 成功回傳 狀態碼 201，失敗回傳 狀態碼 400
-     */
+    @Operation(summary = "新增留言", description = "新增留言，留言者為當前登入會員")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "留言新增成功"),
+            @ApiResponse(responseCode = "400", description = "留言新增失敗")
+    })
     @PostMapping("")
     public ResponseEntity<String> addComment(@RequestBody Comment comment) {
         if (commentService.addComment(comment)) {

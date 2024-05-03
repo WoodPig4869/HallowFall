@@ -17,9 +17,10 @@
               開發日誌
             </p>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><router-link class="dropdown-item disabled" to="/devlog">版本日誌</router-link></li>
-              <li><a href="/api-docs/swagger-ui/index.html" target="_blank" class="dropdown-item">Swagger UI (API文件)</a></li>
-              <li><router-link class="dropdown-item disabled" to="/future">未來展望</router-link></li>
+              <li><router-link class="dropdown-item" to="/release">版本日誌</router-link></li>
+              <li><router-link class="dropdown-item" to="/erm">資料庫 ER Model</router-link></li>
+              <li><router-link class="dropdown-item" to="/swagger">Swagger UI（API文件）</router-link></li>
+              <li><router-link class="dropdown-item disabled" to="$">未來展望</router-link></li>
             </ul>
           </li>
           <li class=" nav-item">

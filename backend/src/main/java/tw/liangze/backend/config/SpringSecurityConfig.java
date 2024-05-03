@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter;
 import tw.liangze.backend.filter.JwtAuthenticationFilter;
 import tw.liangze.backend.service.UserDetailsServiceImp;
 
@@ -36,11 +37,12 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(AbstractHttpConfigurer::disable)
+
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**","/register/**","/user/check/**","/assets/**",  "/*", "/index.html")
+                        req->req.requestMatchers("/login/**","/register/**","/user/check/**","/assets/**",  "/*","swagger.html", "/index.html")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET,"api-docs/**","/post/**","user/**","/comment/**")
                                 .permitAll()
@@ -48,6 +50,7 @@ public class SpringSecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailsServiceImp)
+
                 .exceptionHandling(e->e.accessDeniedHandler(accessDeniedHandler)
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .sessionManagement(session -> session

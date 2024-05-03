@@ -6,7 +6,7 @@
       </el-avatar>
       <div class="flex-grow-1">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <router-link :to="`/posts/${comment.userId}`" class="text-decoration-none fw-bold">{{ this.comment.nickname
+          <router-link :to="`/userPosts/${comment.userId}`" class="text-decoration-none fw-bold">{{ this.comment.nickname
             }}</router-link>
         </div>
         <p class="mb-0">{{ this.comment.content }}</p>
